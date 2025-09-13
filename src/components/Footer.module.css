@@ -1,0 +1,29 @@
+.footer {
+  height: 60px;
+  flex-shrink: 0; /* Impede que o rodapé encolha */
+  background-color: var(--surface-background);
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-color);
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+  color: var(--text-color-muted);
+  font-size: 0.875rem;
+}
+
+.links {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.links a {
+  color: var(--text-color-muted);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.links a:hover {
+  color: var(--primary-color);
+}

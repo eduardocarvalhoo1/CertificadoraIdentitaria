@@ -1,0 +1,22 @@
+/* Importe ou copie todo o conteúdo de Alunos.module.css aqui */
+.container, .header, .title, .button, .tableWrapper, .table, .actions, .actionButton, .editButton, .deleteButton, .actionsHeader {
+    /* Estilos copiados de Alunos.module.css */
+}
+
+/* Adicione estes estilos específicos */
+.badge {
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+}
+
+.badgeProfessor {
+  background-color: #4f46e5; /* Indigo */
+}
+
+.badgeTutor {
+  background-color: #059669; /* Verde */
+}
