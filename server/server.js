@@ -1,32 +1,23 @@
-const app = require('./config/express')();
-const port = app.get('port');
-const db = require("./config/firestoreConfig");
-const { ref, set, get, child } = require("firebase/database");
-
-// Teste de conexão Firebase
-async function testarFirebase() {
-  try {
-    const testRef = ref(db, "conexao_teste");
-    
-    // Escreve um valor temporário
-    await set(testRef, {
-      status: "ok",
-      timestamp: new Date().toISOString()
-    });
-
-    // Lê o valor salvo
-    const snapshot = await get(child(ref(db), "conexao_teste"));
-    if (snapshot.exists()) {
-      console.log("✅ Conexão Firebase funcionando:", snapshot.val());
-    } else {
-      console.log("⚠️ Não conseguiu ler os dados do Firebase.");
-    }
-  } catch (error) {
-    console.error("❌ Erro ao conectar com Firebase:", error);
-  }
-}
-
-app.listen(port, async () => {
-	console.log(`server runing in port ${port}`);
-  	await testarFirebase();
-});
+const app = require('./config/express')(); 
+const port = app.get('port'); 
+const admin = require("./config/firestoreConfig"); // <- this exports firebase-admin 
+const userRouter = require('./routes/user.routes') 
+app.use(userRouter); 
+app.listen(port, async () => { 
+  console.log(`server running on port ${port}`); 
+  try { 
+    // Try to access Firestore 
+    const db = admin.firestore(); // Write a test document 
+    await db.collection("connectionTest").doc("ping").set({ 
+      timestamp: new Date(), 
+      status: "ok" }); // Read it back 
+      const doc = await db.collection("connectionTest").doc("ping").get(); 
+      if (doc.exists) { 
+        console.log("✅ Firestore connection OK:", doc.data()); 
+      } else { 
+        console.log("⚠️ Could not read test document"); 
+      } 
+    } catch (err) { 
+      console.error("❌ Firestore connection failed:", err); 
+    } 
+  });
