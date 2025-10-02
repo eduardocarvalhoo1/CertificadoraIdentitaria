@@ -1,15 +1,20 @@
 const User = require('../models/user.model');
 const admin = require("../config/firestoreConfig");
+const bcrypt = require("bcrypt");
 
 async function createUser(req, res) {
   try {
-    const { nome, senha, email, registro, role } = req.body;
+    let { nome, senha, email, registro, role } = req.body;
+    const saltRounds = 10;
+
+    // hashing password
+    senha = await bcrypt.hash(senha, saltRounds);
 
     // Create Firebase Auth user
     const userRecord = await admin.auth().createUser({
       email,
       displayName: nome,
-      password: senha // required for email/password login
+      password: senha  // required for email/password login
     });
 
     // Build user object
