@@ -1,8 +1,10 @@
 const app = require('./config/express')(); 
 const port = app.get('port'); 
-const admin = require("./config/firestoreConfig"); // <- this exports firebase-admin 
-const userRouter = require('./routes/user.routes') 
-app.use(userRouter); 
+const { admin }= require("./config/firestoreConfig"); // <- this exports firebase-admin 
+const userRouter = require('./routes/user.routes');
+require('dotenv').config({ path: './config/.env' });
+
+app.use('/api/auth', userRouter); 
 app.listen(port, async () => { 
   console.log(`server running on port ${port}`); 
   try { 
