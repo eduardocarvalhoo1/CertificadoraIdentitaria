@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Oficinas from './pages/Oficinas';
 import Alunos from './pages/Alunos';
 import Professores from './pages/Professores';
+import Perfil from './pages/Perfil'; 
 import styles from './App.module.css';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
             <Route path="/oficinas" element={<Oficinas />} />
             <Route path="/alunos" element={<Alunos />} />
             <Route path="/professores" element={<Professores />} />
+            <Route path="/perfil" element={<Perfil />} /> 
           </Routes>
         </main>
         <Footer />
