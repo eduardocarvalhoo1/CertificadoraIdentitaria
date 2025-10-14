@@ -7,6 +7,7 @@ export default function Sidebar() {
     { to: "/oficinas", label: "Oficinas" },
     { to: "/alunos", label: "Alunos" },
     { to: "/professores", label: "Professores" },
+    { to: "/perfil", label: "Meu Perfil" }, // Adicionado link para o perfil
   ];
 
   return (

@@ -55,7 +55,7 @@ async function login(req, res) {
     const snapshot = await usersCollection.where("email", "==", email).get();
 
     if (snapshot.empty) {
-      return res.json(404).json({ error: "Usuário não encontrado"})
+      return res.status(404).json({ error: "Usuário não encontrado"})
     }
 
     // only one user should match
@@ -76,7 +76,7 @@ async function login(req, res) {
       token,
       id: userDoc.id,
       email: userData.email,
-      name: userData.name,
+      name: userData.nome,
     });
 
   } catch (err) {
@@ -89,7 +89,108 @@ async function login(req, res) {
           details: err.errorInfo || err.info || null
       });
   }
-
 }
 
-module.exports = { createUser, login };
+async function getUserById(req, res) {
+    try {
+      const userId = req.params.id;
+  
+      if (req.userId !== userId) {
+        return res.status(403).json({ error: 'Acesso negado: Você só pode acessar seu próprio perfil.' });
+      }
+  
+      const userDoc = await usersCollection.doc(userId).get();
+      if (!userDoc.exists) {
+        return res.status(404).json({ error: "Usuário não encontrado" });
+      }
+  
+      const userData = userDoc.data();
+      delete userData.senha; 
+  
+      res.status(200).json(userData);
+    } catch (err) {
+      console.error("🔥 Erro ao buscar usuário:", err);
+      res.status(500).json({ error: "Erro interno do servidor" });
+    }
+}
+  
+async function updateUser(req, res) {
+    try {
+        const userId = req.params.id;
+        const { nome, email, especialidade, curso } = req.body;
+
+        if (req.userId !== userId) {
+            return res.status(403).json({ error: 'Acesso negado: Você só pode atualizar seu próprio perfil.' });
+        }
+
+        const userRef = usersCollection.doc(userId);
+        const userDoc = await userRef.get();
+
+        if (!userDoc.exists) {
+            return res.status(404).json({ error: 'Usuário não encontrado' });
+        }
+
+        const updateData = {
+            nome,
+            email,
+            especialidade: especialidade || '',
+            curso: curso || '',
+            updatedAt: new Date()
+        };
+
+        await userRef.update(updateData);
+
+        if (email !== userDoc.data().email) {
+            await admin.auth().updateUser(userId, { email });
+        }
+        
+        if (nome !== userDoc.data().nome) {
+            await admin.auth().updateUser(userId, { displayName: nome });
+        }
+
+        const updatedUserDoc = await userRef.get();
+        const updatedUserData = updatedUserDoc.data();
+        delete updatedUserData.senha;
+
+        res.status(200).json({ message: "Perfil atualizado com sucesso", user: updatedUserData });
+    } catch (err) {
+        console.error("🔥 Erro ao atualizar usuário:", err);
+        res.status(500).json({ error: "Erro interno do servidor", details: err.message });
+    }
+}
+
+async function updatePassword(req, res) {
+    try {
+        const userId = req.params.id;
+        const { atual, nova } = req.body;
+
+        if (req.userId !== userId) {
+            return res.status(403).json({ error: 'Acesso negado: Você só pode atualizar sua própria senha.' });
+        }
+
+        const userDoc = await usersCollection.doc(userId).get();
+        if (!userDoc.exists) {
+            return res.status(404).json({ error: 'Usuário não encontrado' });
+        }
+
+        const userData = userDoc.data();
+        
+        const isMatch = await bcrypt.compare(atual, userData.senha);
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Senha atual inválida' });
+        }
+
+        const saltRounds = 10;
+        const newPasswordHash = await bcrypt.hash(nova, saltRounds);
+
+        await usersCollection.doc(userId).update({ senha: newPasswordHash, updatedAt: new Date() });
+        await admin.auth().updateUser(userId, { password: nova });
+
+        res.status(200).json({ message: 'Senha atualizada com sucesso' });
+    } catch (err) {
+        console.error("🔥 Erro ao atualizar senha:", err);
+        res.status(500).json({ error: "Erro interno do servidor", details: err.message });
+    }
+}
+
+module.exports = { createUser, login, getUserById, updateUser, updatePassword };
