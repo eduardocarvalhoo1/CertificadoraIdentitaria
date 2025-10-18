@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import styles from './Header.module.css';
-import { NavLink } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 const UserIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -10,13 +11,22 @@ const UserIcon = () => (
   );
 
 export default function Header() {
+  const {user} = useContext(AuthContext);
+
   return (
     <header className={styles.header}>
       <h1 className={styles.title}>Controle de Oficinas</h1>
-      <Link to="/perfil" className={styles.userProfile}>
-        <UserIcon />
-        <span>Usuário Admin</span>
-      </Link>
+      {user ? 
+        <Link to="/perfil" className={styles.userProfile}>
+          <UserIcon />
+          <span>{user.name}</span>
+        </Link> :
+        <Link to="/login" className={styles.userProfile}>
+          <UserIcon />
+          <span>Login</span>
+        </Link>
+
+      }
     </header>
   );
 }

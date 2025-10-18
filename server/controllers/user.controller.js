@@ -74,9 +74,13 @@ async function login(req, res) {
 
     res.status(200).json({
       token,
-      id: userDoc.id,
-      email: userData.email,
-      name: userData.nome,
+      user: {
+        id: userDoc.id,
+        email: userData.email,
+        name: userData.nome,
+        role: userData.role,
+        register: userData.registro
+      },
     });
 
   } catch (err) {
