@@ -78,6 +78,8 @@ async function login(req, res) {
         id: userDoc.id,
         email: userData.email,
         name: userData.nome,
+        role: userData.role,
+        register: userData.registro
       },
     });
 

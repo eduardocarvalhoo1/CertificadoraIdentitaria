@@ -14,6 +14,7 @@ export function AuthProvider({children}) {
     useEffect(() => {
         if (user) localStorage.setItem("user", JSON.stringify(user));
         if (token) localStorage.setItem("accessToken", token);
+        console.log(user);
     }, [user, token]);
 
     const logout = () => {

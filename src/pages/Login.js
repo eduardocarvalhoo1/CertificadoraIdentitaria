@@ -7,8 +7,7 @@ import { AuthContext } from '../context/AuthContext';
 
 
 export default function Login() {
-    const { setUser, setToken } = useContext(AuthContext);
-    const { user, token } = useContext(AuthContext);
+    const { user, setUser, setToken } = useContext(AuthContext);
     const [mail, setMail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -18,18 +17,16 @@ export default function Login() {
         try {
             const res = await axios.post("http://localhost:8000/api/auth/login", { email: mail, senha: password });
             
-            setUser(JSON.stringify(res.data.user));
+            setUser(res.data.user);
+            console.log(res.data.user);
             setToken(res.data.token);
-
-            console.log(user)
-            alert(`Usuário ${user}  logado com sucesso`);
             navigate('/');
-
-            alert(token)
         } catch (err) {
             alert("Falha ao logar");
             console.log(err);
         }
+        console.log(user);
+        console.log(user.name)
     }
 
     return (
