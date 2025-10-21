@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styles from './Perfil.module.css';
+import { AuthContext } from '../context/AuthContext';
 
 // Ícone de usuário para a foto de perfil
-const UserIcon = () => (
+const UserDataIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className={styles.profileIcon}>
     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
     <circle cx="12" cy="7" r="4"></circle>
@@ -30,8 +31,10 @@ const Notification = ({ message, type, onClose }) => {
 };
 
 
-export default function Perfil() {
-  const [user, setUser] = useState({
+export default function Perfil() { 
+  const { user, setUser } = useContext(AuthContext);
+
+  const [userData, setUserData] = useState({
     nome: '',
     email: '',
     registro: '',
@@ -39,7 +42,7 @@ export default function Perfil() {
     especialidade: '', // Campo para professor
     curso: '',         // Campo para aluno
   });
-  const [originalUser, setOriginalUser] = useState(null);
+  const [originalUserData, setOriginalUserData] = useState(null);
   const [senha, setSenha] = useState({
     atual: '',
     nova: '',
@@ -53,15 +56,15 @@ export default function Perfil() {
   useEffect(() => {
     // Em uma aplicação real, você buscaria os dados de uma API aqui.
     // Alterne o comentário entre os usuários para ver a diferença
-    const fetchedUser = {
-      nome: 'Dr. Carlos Silva',
-      email: 'carlos.silva@example.com',
-      registro: 'PROF98765',
-      role: 'Professor',
+    const fetchedUserData = {
+      nome: user.name,
+      email: user.email,
+      registro: user.register,
+      role: user.role,
       especialidade: 'Engenharia Mecatrônica',
       curso: ''
     };
-    /* const fetchedUser = {
+    /* const fetchedUserData = {
       nome: 'Ana Pereira',
       email: 'ana.p@example.com',
       registro: 'ALUNO12345',
@@ -69,13 +72,13 @@ export default function Perfil() {
       especialidade: '',
       curso: 'Engenharia de Software'
     }; */
-    setUser(fetchedUser);
-    setOriginalUser(fetchedUser);
+    setUserData(fetchedUserData);
+    setOriginalUserData(fetchedUserData);
   }, []);
 
-  const handleUserChange = (e) => {
+  const handleUserDataChange = (e) => {
     const { name, value } = e.target;
-    setUser(prev => ({ ...prev, [name]: value }));
+    setUserData(prev => ({ ...prev, [name]: value }));
   };
   
   const handleSenhaChange = (e) => {
@@ -88,8 +91,8 @@ export default function Perfil() {
   };
 
   const handleCancel = () => {
-    if (originalUser) {
-        setUser(originalUser);
+    if (originalUserData) {
+        setUserData(originalUserData);
     }
     setSenha({ atual: '', nova: '', confirmarNova: '' });
     setIsEditing(false);
@@ -110,12 +113,12 @@ export default function Perfil() {
     // Simula uma chamada de API para salvar os dados
     setTimeout(() => {
       // Aqui você adicionaria a lógica para salvar os dados no backend
-      console.log('Dados do usuário para salvar:', user);
+      console.log('Dados do usuário para salvar:', userData);
       if(senha.nova) {
           console.log('Nova senha a ser salva (após validação de backend com a senha atual).');
       }
 
-      setOriginalUser(user); // Atualiza os dados originais com os novos dados salvos
+      setOriginalUserData(userData); // Atualiza os dados originais com os novos dados salvos
       setIsSaving(false);
       setIsEditing(false);
       setSenha({ atual: '', nova: '', confirmarNova: '' });
@@ -135,12 +138,12 @@ export default function Perfil() {
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.profileHeader}>
           <div className={styles.profilePicture}>
-            <UserIcon />
+            <UserDataIcon />
           </div>
           <div className={styles.profileInfo}>
-            <h3>{originalUser?.nome}</h3>
-            <p>{originalUser?.email}</p>
-            <span className={styles.badge}>{originalUser?.role}</span>
+            <h3>{originalUserData?.nome}</h3>
+            <p>{originalUserData?.email}</p>
+            <span className={styles.badge}>{originalUserData?.role}</span>
           </div>
         </div>
 
@@ -149,28 +152,28 @@ export default function Perfil() {
           <div className={styles.formGrid}>
             <div className={styles.formGroup}>
               <label htmlFor="nome">Nome Completo</label>
-              <input type="text" id="nome" name="nome" value={user.nome} onChange={handleUserChange} required disabled={!isEditing} />
+              <input type="text" id="nome" name="nome" value={userData.nome} onChange={handleUserDataChange} required disabled={!isEditing} />
             </div>
             <div className={styles.formGroup}>
               <label htmlFor="email">Email</label>
-              <input type="email" id="email" name="email" value={user.email} onChange={handleUserChange} required disabled={!isEditing} />
+              <input type="email" id="email" name="email" value={userData.email} onChange={handleUserDataChange} required disabled={!isEditing} />
             </div>
             <div className={styles.formGroup}>
               <label htmlFor="registro">Registro</label>
-              <input type="text" id="registro" name="registro" value={user.registro} disabled />
+              <input type="text" id="registro" name="registro" value={userData.registro} disabled />
             </div>
             
             {/* Campo condicional baseado no papel do usuário */}
-            {user.role === 'Professor' && (
+            {userData.role === 'Professor' && (
               <div className={styles.formGroup}>
                 <label htmlFor="especialidade">Especialidade</label>
-                <input type="text" id="especialidade" name="especialidade" value={user.especialidade} onChange={handleUserChange} disabled={!isEditing} />
+                <input type="text" id="especialidade" name="especialidade" value={userData.especialidade} onChange={handleUserDataChange} disabled={!isEditing} />
               </div>
             )}
-            {user.role === 'Aluno' && (
+            {userData.role === 'Aluno' && (
               <div className={styles.formGroup}>
                 <label htmlFor="curso">Curso</label>
-                <input type="text" id="curso" name="curso" value={user.curso} onChange={handleUserChange} disabled={!isEditing} />
+                <input type="text" id="curso" name="curso" value={userData.curso} onChange={handleUserDataChange} disabled={!isEditing} />
               </div>
             )}
           </div>
