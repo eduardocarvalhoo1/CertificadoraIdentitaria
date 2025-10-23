@@ -12,7 +12,10 @@ export function AuthProvider({children}) {
 
     // Automatically persist login info
     useEffect(() => {
-        if (user) localStorage.setItem("user", JSON.stringify(user));
+        if (user) {
+            localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("userId", user.id);
+        }
         if (token) localStorage.setItem("accessToken", token);
         console.log(user);
     }, [user, token]);

@@ -1,12 +1,11 @@
 const Aluno = require('../models/aluno.model');
 const { db } = require("../config/firestoreConfig");
-const alunosCollection = db.collection("alunos");
 const usersCollection = db.collection("users");
 
 // GET /api/alunos - Listar todos os alunos
 async function getAllAlunos(req, res) {
     try {
-        const snapshot = await alunosCollection.orderBy("nome").get();
+        const snapshot = await usersCollection.where("role", "==", "aluno").orderBy("nome").get();
         if (snapshot.empty) {
             return res.status(200).json([]);
         }
@@ -30,7 +29,7 @@ async function createAluno(req, res) {
         if (!nome || !email || !oficina) {
             return res.status(400).json({ error: "Nome, email e oficina são obrigatórios." });
         }
-        const newAlunoRef = alunosCollection.doc();
+        const newAlunoRef = usersCollection.doc();
         const alunoData = Aluno({
             alunoId: newAlunoRef.id,
             nome,
@@ -57,7 +56,7 @@ async function updateAluno(req, res) {
         const alunoId = req.params.id;
         const { nome, email, oficina } = req.body;
 
-        const alunoRef = alunosCollection.doc(alunoId);
+        const alunoRef = usersCollection.doc(alunoId);
         const doc = await alunoRef.get();
 
         if (!doc.exists) {
@@ -90,7 +89,7 @@ async function deleteAluno(req, res) {
         }
 
         const alunoId = req.params.id;
-        const alunoRef = alunosCollection.doc(alunoId);
+        const alunoRef = usersCollection.doc(alunoId);
         const doc = await alunoRef.get();
 
         if (!doc.exists) {

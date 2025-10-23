@@ -1,7 +1,8 @@
 const app = require('./config/express')(); 
 const port = app.get('port'); 
 const { admin }= require("./config/firestoreConfig"); // <- this exports firebase-admin 
-const userRouter = require('./routes/user.routes');
+const userRouter = require('./routes/user.routes');7
+const professorRouter = require('./routes/professor.routes');
 const swaggerUI = require('swagger-ui-express');
 const swaggerFile = require('./swagger-output.json');
 const cors = require('cors');
@@ -17,7 +18,7 @@ app.use(cors({
 app.use('/api/auth', userRouter);                                 
 app.use('api/docs', swaggerUI.serve, swaggerUI.setup(swaggerFile)); // swagger config 
 
-app.use('/api/auth', userRouter); 
+app.use('/api/professor', professorRouter); 
 app.use('/api/alunos', alunoRouter); // Usando a rota de alunos
 
 app.listen(port, async () => { 

@@ -21,7 +21,7 @@ export default function Alunos() {
       setIsLoading(true);
       setError(null);
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('accessToken');
         const userId = localStorage.getItem('userId');
 
         if (!token || !userId) {

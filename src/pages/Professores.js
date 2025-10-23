@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styles from './Professores.module.css';
 import Modal from '../components/Modal';
 
@@ -18,6 +18,53 @@ export default function Professores() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentProfessor, setCurrentProfessor] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [userRole, setUserRole] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async  () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const token = localStorage.getItem('accessToken');
+        const userId = localStorage.getItem('userId');
+        
+        if (!token || !userId) {
+          throw new Error('Você precisa estar logado para acessar esta página');
+        }
+
+        // Busca o perfil do usuário e a lista de alunos em paralelo
+        const [userResponse, professorResponse] = await Promise.all([
+          fetch(`http://localhost:8000/api/auth/profile/${userId}`, {
+            headers: { 'Authorization': token }
+          }),
+          fetch('http://localhost:8000/api/professor', {
+            headers: { 'Authorization': token }
+          })
+        ]);
+
+        if (!userResponse.ok) {
+            throw new Error('Não foi possível verificar sua permissão.');
+        }
+        const userData = await userResponse.json();
+        setUserRole(userData.role);
+
+        if (!professorResponse.ok) {
+          throw new Error('Falha ao buscar professores');
+        }
+        const data = await professorResponse.json();
+        setProfessores(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
 
   const filteredProfessores = useMemo(() =>
     professores.filter(prof =>
@@ -85,8 +132,8 @@ export default function Professores() {
                     <td>{prof.nome}</td>
                     <td>{prof.especialidade}</td>
                     <td>
-                    <span className={`${styles.badge} ${prof.tipo === 'Professor' ? styles.badgeProfessor : styles.badgeTutor}`}>
-                        {prof.tipo}
+                    <span className={`${styles.badge} ${prof.role === 'professor' ? styles.badgeProfessor : styles.badgeTutor}`}>
+                        {prof.role}
                     </span>
                     </td>
                     <td className={styles.actions}>
