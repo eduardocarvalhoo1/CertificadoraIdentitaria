@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styles from './Perfil.module.css';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 // Ícone de usuário para a foto de perfil
@@ -32,7 +33,8 @@ const Notification = ({ message, type, onClose }) => {
 
 
 export default function Perfil() { 
-  const { user, setUser } = useContext(AuthContext);
+  const { user, setUser, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [userData, setUserData] = useState({
     nome: '',
@@ -126,6 +128,10 @@ export default function Perfil() {
     }, 1500); // Simula um delay de 1.5s
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  }
   return (
     <div className={styles.container}>
       <Notification 
@@ -212,6 +218,7 @@ export default function Perfil() {
           ) : (
             <button type="button" className={styles.button} onClick={() => setIsEditing(true)}>Editar Perfil</button>
           )}
+          <button type="button" className={styles.button} onClick={handleLogout}>Sair </button>
         </div>
       </form>
     </div>

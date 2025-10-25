@@ -9,6 +9,8 @@ import Professores from './pages/Professores';
 import Login from './pages/Login';
 import Perfil from './pages/Perfil'; 
 import styles from './App.module.css';
+import { ProtectedRoute } from './components/ProtectedRoute';
+
 
 function App() {
   return (
@@ -18,12 +20,18 @@ function App() {
         <Header />
         <main className={styles.pageContent}>
           <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/oficinas" element={<Oficinas />} />
-            <Route path="/alunos" element={<Alunos />} />
-            <Route path="/professores" element={<Professores />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/perfil" element={<Perfil />} /> 
+            {/* Rotas comuns (qualquer usuário logado) */}
+            <Route element={<ProtectedRoute roles={["aluno", "tutor", "professor"]} />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/oficinas" element={<Oficinas />} />
+              <Route path="/alunos" element={<Alunos />} />
+              <Route path="/perfil" element={<Perfil />} />
+            </Route>
+            {/* Rotas exclusivas de professor */}
+            <Route element={<ProtectedRoute roles={["professor"]} />}> 
+             <Route path="/professores" element={<Professores />} />  
+            </Route>
+            <Route path="/login" element={<Login />} /> 
           </Routes>
         </main>
         <Footer />
