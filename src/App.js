@@ -10,9 +10,11 @@ import Login from './pages/Login';
 import Perfil from './pages/Perfil'; 
 import styles from './App.module.css';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { useTokenExpiration } from './hooks/useTokenExpiration';
 
 
 function App() {
+  useTokenExpiration();
   return (
     <div className={styles.appContainer}>
       <Sidebar />
@@ -20,9 +22,9 @@ function App() {
         <Header />
         <main className={styles.pageContent}>
           <Routes>
+            <Route path="/" element={<Dashboard />} />
             {/* Rotas comuns (qualquer usuário logado) */}
             <Route element={<ProtectedRoute roles={["aluno", "tutor", "professor"]} />}>
-              <Route path="/" element={<Dashboard />} />
               <Route path="/oficinas" element={<Oficinas />} />
               <Route path="/alunos" element={<Alunos />} />
               <Route path="/perfil" element={<Perfil />} />
