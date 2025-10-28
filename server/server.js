@@ -6,6 +6,7 @@ const swaggerUI = require('swagger-ui-express');
 const swaggerFile = require('./swagger-output.json');
 const cors = require('cors');
 const alunoRouter = require('./routes/aluno.routes'); // Rota de alunos
+const oficinaRouter = require("./routes/oficina.routes");
 
 require('dotenv').config({ path: './config/.env' });
 app.use(cors());
@@ -15,10 +16,12 @@ app.use(cors({
   allowHeaders: ["Content-Type", "Authorization"]
 }));
 app.use('/api/auth', userRouter);                                 
-app.use('api/docs', swaggerUI.serve, swaggerUI.setup(swaggerFile)); // swagger config 
+app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerFile)); // swagger config 
 
 app.use('/api/auth', userRouter); 
 app.use('/api/alunos', alunoRouter); // Usando a rota de alunos
+
+app.use('/api/oficinas', oficinaRouter);
 
 app.listen(port, async () => { 
   console.log(`server running on port ${port}`); 
