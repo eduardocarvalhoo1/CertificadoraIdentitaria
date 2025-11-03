@@ -34,8 +34,21 @@ async function createUser(req, res) {
 
     // Save in Firestore
     await admin.firestore().collection("users").doc(userRecord.uid).set(userDoc);
-
-    res.status(201).json({ message: "User created", user: userDoc });
+    
+    const token = jwt.sign({ userId: userDoc.id }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    })
+    res.status(201).json({ 
+      message: "User created",
+      token,
+      user: {
+        id: userDoc.userId,
+        email: userDoc.email,
+        name: userDoc.nome,
+        role: userDoc.role,
+        register: userDoc.registro
+      }
+     });
   }  catch (err) {
         console.error("🔥 Full error:", err); // full object
         console.error("🔥 Error keys:", Object.keys(err)); // see what properties exist
