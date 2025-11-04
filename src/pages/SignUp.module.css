@@ -48,5 +48,6 @@ a {
 }
 
 a:hover {
-  cursor: pointer; 
+  cursor: pointer;
+  color: rgb(95, 159, 255); 
 }

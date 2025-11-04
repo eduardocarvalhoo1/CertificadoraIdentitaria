@@ -12,6 +12,12 @@ async function createUser(req, res) {
     let { nome, senha, email, registro, role } = req.body;
     const saltRounds = 10;
 
+    
+    const snapshot = await usersCollection.where("registro", "==", registro).get();
+    if (!snapshot.empty) {
+      return res.status(400).json({ error: "Registro já cadastrado" })
+    }
+
     // hashing password
     senha = await bcrypt.hash(senha, saltRounds);
 
@@ -35,7 +41,7 @@ async function createUser(req, res) {
     // Save in Firestore
     await admin.firestore().collection("users").doc(userRecord.uid).set(userDoc);
     
-    const token = jwt.sign({ userId: userDoc.id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: userDoc.userId }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     })
     res.status(201).json({ 

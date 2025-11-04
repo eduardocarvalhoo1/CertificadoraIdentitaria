@@ -37,7 +37,7 @@ export default function SignUp() {
             setToken(res.data.token);
             navigate('/perfil');
         } catch (err) {
-            alert("Falha ao Cadastrar");
+            alert("Falha ao Cadastrar: ");
             console.log(err);
         } finally {
             setIsSubmitting(false);

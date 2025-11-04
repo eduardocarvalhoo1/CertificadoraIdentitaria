@@ -1,8 +1,9 @@
 import React from "react";
+import styles from './CargoInput.module.css';
 
 export default function CargoInput({ value, onChange, placeholder }) {
   return (
-    <div>
+    <div className={styles.box}>
       <label htmlFor="role">Cargo</label>
       <select id="role" value={value} onChange={onChange}>
         <option value="" disabled hidden>
