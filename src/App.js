@@ -7,6 +7,7 @@ import Oficinas from './pages/Oficinas';
 import Alunos from './pages/Alunos';
 import Professores from './pages/Professores';
 import Login from './pages/Login';
+import SignUp from './pages/SignUp';
 import Perfil from './pages/Perfil'; 
 import styles from './App.module.css';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -23,6 +24,8 @@ function App() {
         <main className={styles.pageContent}>
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/login" element={<Login />} /> 
+            <Route path="/signup" element={<SignUp />} /> 
             {/* Rotas comuns (qualquer usuário logado) */}
             <Route element={<ProtectedRoute roles={["aluno", "tutor", "professor"]} />}>
               <Route path="/oficinas" element={<Oficinas />} />
@@ -33,7 +36,6 @@ function App() {
             <Route element={<ProtectedRoute roles={["professor"]} />}> 
              <Route path="/professores" element={<Professores />} />  
             </Route>
-            <Route path="/login" element={<Login />} /> 
           </Routes>
         </main>
         <Footer />

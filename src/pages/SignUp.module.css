@@ -46,3 +46,8 @@ a {
   color: rgb(69, 143, 255);
   font-weight: 500;
 }
+
+a:hover {
+  cursor: pointer;
+  color: rgb(95, 159, 255); 
+}

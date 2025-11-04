@@ -33,6 +33,7 @@ export default function Login() {
                 <input value={mail} onChange={(e) => setMail(e.target.value)} placeholder='Usuário'/>
                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Senha' />
                 <button type="submit">Login</button> 
+                <a onClick={() => navigate('/signup')}>Criar Conta</a>
             </form>
         </div>
     );
