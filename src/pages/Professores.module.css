@@ -79,10 +79,19 @@
     background-color: #f9fafb;
 }
 
-.emptyMessage {
+.loading, .emptyMessage, .error {
     text-align: center;
     padding: 40px;
     color: var(--text-color-muted);
+}
+
+.error {
+    background-color: #fef2f2;
+    color: #ef4444;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 24px;
 }
   
 .actionsHeader {
@@ -130,7 +139,7 @@
     font-size: 0.75rem;
     font-weight: 600;
     color: white;
-    text-transform: uppercase;
+    text-transform: capitalize;
 }
   
 .badgeProfessor {
