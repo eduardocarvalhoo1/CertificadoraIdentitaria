@@ -3,7 +3,8 @@ const Oficina = require("../models/oficina.model");
 
 async function createOficina(req, res) {
   try {
-    const user = req.user;
+    const role = req.userRole;
+    const userId = req.userId;
 
     if (user.role !== "Professor") {
       return res.status(403).json({ error: "Apenas professores podem criar oficinas." });
