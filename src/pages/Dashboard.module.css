@@ -29,6 +29,16 @@
     margin-bottom: 1.5rem;
 }
 
+.error {
+    background-color: #fef2f2;
+    color: #ef4444;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
 /* Estilos do Gráfico */
 .chart {
     background-color: #ffffff;
