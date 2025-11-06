@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import styles from './Perfil.module.css';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
 
 // Ícone de usuário para a foto de perfil
 const UserDataIcon = () => (
@@ -33,7 +34,7 @@ const Notification = ({ message, type, onClose }) => {
 
 
 export default function Perfil() { 
-  const { user, setUser, logout } = useContext(AuthContext);
+  const { user, token, setUser, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState({
@@ -62,9 +63,7 @@ export default function Perfil() {
       nome: user.name,
       email: user.email,
       registro: user.register,
-      role: user.role,
-      especialidade: 'Engenharia Mecatrônica',
-      curso: ''
+      role: user.role
     };
     /* const fetchedUserData = {
       nome: 'Ana Pereira',
@@ -100,8 +99,9 @@ export default function Perfil() {
     setIsEditing(false);
   };
 
-  const handleSubmit = (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
+    if (isSaving) return;
     setIsSaving(true);
     setNotification({ message: '', type: '' });
 
@@ -113,19 +113,29 @@ export default function Perfil() {
     }
     
     // Simula uma chamada de API para salvar os dados
-    setTimeout(() => {
-      // Aqui você adicionaria a lógica para salvar os dados no backend
-      console.log('Dados do usuário para salvar:', userData);
-      if(senha.nova) {
-          console.log('Nova senha a ser salva (após validação de backend com a senha atual).');
-      }
-
-      setOriginalUserData(userData); // Atualiza os dados originais com os novos dados salvos
+    try{
+      const res = await axios.put(`http://localhost:8000/api/auth/profile/${user.id}`,
+                                    { 
+                                      nome: userData.nome,
+                                      email: userData.email,
+                                      especialidade: '',
+                                      curso: '',
+                                    },
+                                    {
+                                      headers: {
+                                        Authorization: `${token}`,
+                                      },
+                                    }
+                                  );
+      console.log("user: ", res.data.user);  
+      console.log(res.data);                            
+      setUser(res.data.user);
+    } catch (err) {
+      alert(err);
+      console.log(err); 
+    } finally { 
       setIsSaving(false);
-      setIsEditing(false);
-      setSenha({ atual: '', nova: '', confirmarNova: '' });
-      showNotification('Perfil atualizado com sucesso!', 'success');
-    }, 1500); // Simula um delay de 1.5s
+    }
   };
 
   const handleLogout = () => {
