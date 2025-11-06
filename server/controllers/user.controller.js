@@ -175,7 +175,15 @@ async function updateUser(req, res) {
         const updatedUserData = updatedUserDoc.data();
         delete updatedUserData.senha;
 
-        res.status(200).json({ message: "Perfil atualizado com sucesso", user: updatedUserData });
+        res.status(200).json({ message: "Perfil atualizado com sucesso", 
+        user: {
+          id: userDoc.id,
+          email: updatedUserData.email,
+          name: updatedUserData.nome,
+          role: updatedUserData.role,
+          register: updatedUserData.registro
+        }, 
+      });
     } catch (err) {
         console.error("🔥 Erro ao atualizar usuário:", err);
         res.status(500).json({ error: "Erro interno do servidor", details: err.message });
