@@ -11,6 +11,7 @@ const professorRouter = require('./routes/professor.routes');
 const alunoRouter = require('./routes/aluno.routes'); 
 const oficinaRouter = require('./routes/oficina.routes');
 const publicRouter = require('./routes/public.routes'); // <-- Nova rota pública
+const salaRouter = require('./routes/sala.routes');
 
 require('dotenv').config({ path: './config/.env' });
 
@@ -30,6 +31,7 @@ app.use('api/docs', swaggerUI.serve, swaggerUI.setup(swaggerFile)); // swagger c
 app.use('/api/professor', professorRouter); 
 app.use('/api/alunos', alunoRouter);
 app.use('/api/oficinas', oficinaRouter); 
+app.use('/api/salas', salaRouter);
 
 // Iniciar servidor
 app.listen(port, async () => { 

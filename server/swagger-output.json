@@ -99,6 +99,13 @@
             }
           },
           {
+            "name": "slice(7",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "Authorization",
             "in": "header",
             "schema": {
@@ -134,6 +141,13 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "slice(7",
+            "in": "header",
             "schema": {
               "type": "string"
             }
@@ -204,6 +218,13 @@
             }
           },
           {
+            "name": "slice(7",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "Authorization",
             "in": "header",
             "schema": {
@@ -254,6 +275,13 @@
       "post": {
         "description": "",
         "parameters": [
+          {
+            "name": "slice(7",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "Authorization",
             "in": "header",
