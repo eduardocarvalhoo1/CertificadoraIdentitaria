@@ -2,6 +2,9 @@ import React, { useState, useMemo, useEffect, useContext } from 'react';
 import styles from './Oficinas.module.css';
 import Modal from '../components/Modal';
 import { AuthContext } from '../context/AuthContext'; // Importar AuthContext
+import DTPicker from '../components/DateTimePicker';
+import 'dayjs/locale/en-gb';
+import dayjs from 'dayjs';
 
 // Ícones SVG
 const AddIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>;
@@ -193,7 +196,7 @@ export default function Oficinas() {
                   <td>{oficina.professor}</td>
                   <td className={styles.centerText}>{oficina.vagas}</td>
                   <td>{oficina.local}</td>
-                  <td>{oficina.dataInicio}</td>
+                  <td>{dayjs(oficina.dataInicio).format('DD/MM/YYYY HH:mm')}</td>
                   {userRole === 'professor' && (
                     <td className={styles.actions}>
                       <button className={`${styles.actionButton} ${styles.editButton}`} onClick={() => handleOpenModal(oficina)}>
@@ -300,11 +303,23 @@ const OficinaModal = ({ isOpen, onClose, onSave, oficina }) => {
           </div>
            <div className={styles.formGroup}>
             <label htmlFor="dataInicio">Data de Início</label>
-            <input type="date" id="dataInicio" name="dataInicio" value={formData.dataInicio} onChange={handleChange} required />
+            <DTPicker
+              id="dataInicio"
+              label="Data de Início"
+              name="dataInicio"
+              value={formData.dataInicio}
+              onChange={handleChange}
+            />
           </div>
            <div className={styles.formGroup}>
             <label htmlFor="dataFim">Data de Fim (Opcional)</label>
-            <input type="date" id="dataFim" name="dataFim" value={formData.dataFim} onChange={handleChange} />
+            <DTPicker
+              id="dataFim"
+              name="dataFim"
+              label="Data de Fim"
+              value={formData.dataFim}
+              onChange={handleChange}
+            />
           </div>
           <div className={styles.formActions}>
             <button type="button" className={`${styles.button} ${styles.cancelButton}`} onClick={onClose}>Cancelar</button>
