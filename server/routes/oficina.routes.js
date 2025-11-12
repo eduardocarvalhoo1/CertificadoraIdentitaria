@@ -18,4 +18,13 @@ router.put("/:id", oficinaController.isProfessor, oficinaController.updateOficin
 // DELETE /api/oficinas/:id - Excluir (só professor)
 router.delete("/:id", oficinaController.isProfessor, oficinaController.deleteOficina);
 
+// POST /api/oficinas/:id/inscrever
+router.post('/:id/inscrever', oficinaController.inscreverAluno);
+
+// DELETE /api/oficinas/:id/inscrever
+router.delete('/:id/inscrever', oficinaController.cancelarInscricao);
+
+// GET /api/oficinas/:id/inscritos - Lista alunos inscritos em uma oficina (só professores)
+router.get('/:id/inscritos', oficinaController.isProfessor, oficinaController.getAlunosInscritos);
+
 module.exports = router;

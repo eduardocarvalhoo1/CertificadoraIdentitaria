@@ -108,10 +108,145 @@ async function deleteOficina(req, res) {
     }
 }
 
+// POST /api/oficinas/:id/inscrever
+async function inscreverAluno(req, res) {
+    try {
+        const oficinaId = req.params.id;
+        const alunoId = req.userId;
+
+        const oficinaRef = oficinasCollection.doc(oficinaId);
+        const oficinaDoc = await oficinaRef.get();
+
+        if (!oficinaDoc.exists) {
+            return res.status(404).json({error: "Oficina não encontrada"});
+        }
+
+        const oficinaData = oficinaDoc.data();
+
+        if (oficinaData.alunosInscritos && oficinaData.alunosInscritos.includes(alunoId)) {
+            return res.status(400).json({error: "Você já está inscrito nesta oficina"});
+        }
+
+        const inscritosAtuais = oficinaData.alunosInscritos?.length || 0;
+        if (inscritosAtuais >= oficinaData.vagas) {
+            return res.status(400).json({error: "Oficina sem vagas disponíveis"});
+        }
+
+        const alunosAtualizados = [...(oficinaData.alunosInscritos || []), alunoId];
+
+        await oficinaRef.update({
+            alunosInscritos: alunosAtualizados,
+            updatedAt: new Date()
+        });
+
+        res.status(200).json({
+            message: "Inscrição realizada com sucesso",
+            vagasRestantes: oficinaData.vagas - alunosAtualizados.length
+        })
+
+    } catch (error) {
+        console.error("Erro ao fazer a inscrição: ", error);
+        res.status(500).json({error: "Erro interno do servidor"});
+    }
+}
+
+// DELETE /api/oficinas/:id/inscrever
+async function cancelarInscricao(req, res) {
+    try {
+        const oficinaId = req.params.id;
+        const alunoId = req.userId;
+
+        const oficinaRef = oficinasCollection.doc(oficinaId);
+        const oficinaDoc = await oficinaRef.get();
+
+        if (!oficinaDoc.exists) {
+            return res.status(404).json({error: "Oficina não encontrada"});
+        }
+
+        const oficinaData = oficinaDoc.data();
+
+        if (!oficinaData.alunosInscritos || !oficinaData.alunosInscritos.includes(alunoId)) {
+            return res.status(400).json({error: "Você não está inscrito nesta oficina"});
+        }
+
+        const alunosAtualizados = oficinaData.alunosInscritos.filter(id => id !== alunoId);
+
+        await oficinaRef.update({
+            alunosInscritos: alunosAtualizados,
+            updatedAt: new Date()
+        });
+
+        res.status(200).json({
+            message: "Inscrição cancelada com sucesso",
+            vagasRestantes: oficinaData.vagas - alunosAtualizados.length
+        })
+
+    } catch (error) {
+        console.error("Erro ao cancelar inscrição: ", error);
+        res.status(500).json({error: "Erro interno do servidor"});
+    }
+}
+
+// GET /api/oficinas/:id/inscritos - Lista alunos inscritos em uma oficina (apenas professores)
+async function getAlunosInscritos(req, res) {
+    try {
+        const oficinaId = req.params.id;
+
+        const oficinaRef = oficinasCollection.doc(oficinaId);
+        const oficinaDoc = await oficinaRef.get();
+
+        if (!oficinaDoc.exists) {
+            return res.status(404).json({error: "Oficina não encontrada"});
+        }
+
+        const oficinaData = oficinaDoc.data();
+        const alunosIds = oficinaData.alunosInscritos || [];
+
+        if (alunosIds.length === 0) {
+            return res.status(200).json({
+                oficina: oficinaData.tema,
+                totalInscritos: 0,
+                vagas: oficinaData.vagas,
+                vagasRestantes: oficinaData.vagas,
+                alunos: []
+            });
+
+        }
+
+        const alunosPromises = alunosIds.map(alunoId => usersCollection.doc(alunoId).get());
+        const alunosDocs = await Promise.all(alunosPromises);
+
+        const alunos = alunosDocs
+            .filter(doc => doc.exists)
+            .map(doc => ({
+                id: doc.id,
+                nome: doc.data().nome,
+                email: doc.data().email
+            }));
+
+        res.status(200).json({
+            oficina: oficinaData.tema,
+            totalInscritos: alunos.length,
+            vagas: oficinaData.vagas,
+            vagasRestantes: oficinaData.vagas - alunos.length,
+            alunos
+        })
+
+    } catch (error) {
+        console.error("Erro ao buscar alunos inscritos", error);
+        res.status(500).json({error: "Erro interno do servidor"});
+    }
+}
+
+
+
 module.exports = {
     isProfessor,
     getAllOficinas,
     createOficina,
     updateOficina,
-    deleteOficina
+    deleteOficina,
+    inscreverAluno,
+    cancelarInscricao,
+    getAlunosInscritos
 };
