@@ -4,6 +4,11 @@
 function Oficina({ oficinaId, tema, professor, vagas, dataInicio, dataFim, local }) {
     // Validações básicas (podem ser expandidas)
     if (!tema || !professor || !vagas || !dataInicio || !local) {
+        console.log("Oficina tema: ", tema);
+        console.log("Oficina vagas: ", vagas);
+        console.log("Oficina professor: ", professor);
+        console.log("Oficina data: ", dataInicio, "/", dataFim);
+        console.log("Oficina local: ", local);
         throw new Error("Campos obrigatórios (tema, professor, vagas, dataInicio, local) não podem ser vazios.");
     }
 

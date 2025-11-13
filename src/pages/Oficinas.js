@@ -5,6 +5,7 @@ import { AuthContext } from '../context/AuthContext'; // Importar AuthContext
 import DTPicker from '../components/DateTimePicker';
 import 'dayjs/locale/en-gb';
 import dayjs from 'dayjs';
+import SelectInput from '../components/SelectInput';
 
 // Ícones SVG
 const AddIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>;
@@ -247,7 +248,10 @@ export default function Oficinas() {
 }
 
 // Componente do Modal para formulário da Oficina
-const OficinaModal = ({ isOpen, onClose, onSave, oficina }) => {
+const OficinaModal = ({ isOpen, onClose, onSave, oficina }) => { 
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [salas, setSalas] = useState([]);
     const [formData, setFormData] = useState({
       tema: '',
       professor: '',
@@ -256,6 +260,8 @@ const OficinaModal = ({ isOpen, onClose, onSave, oficina }) => {
       dataInicio: '',
       dataFim: '',
     });
+
+    const { token } = useContext(AuthContext);
   
     React.useEffect(() => {
       if (oficina) {
@@ -271,6 +277,37 @@ const OficinaModal = ({ isOpen, onClose, onSave, oficina }) => {
         setFormData({ tema: '', professor: '', vagas: '', local: '', dataInicio: '', dataFim: '' });
       }
     }, [oficina, isOpen]);
+    
+    // Fetchs rooms data 
+    React.useEffect(() => {
+      const fetchSalas = async () => {
+        if (!token) {
+          setError("Usuário desconectado. Faça o login novamente")
+          setIsLoading(false);
+          return;
+        }
+
+        setError(null);
+        setIsLoading(true);
+
+        try {
+          const response = await fetch('http://localhost:8000/api/salas', {
+            headers: {'Authorization': token}
+          });
+          if (!response.ok) {
+            throw new Error('Falha ao buscar salas.');
+          }
+          const data = await response.json();
+          setSalas(data);
+        } catch(err) {
+          setError(err.message);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchSalas();
+    }, [isOpen, token]);
+
   
     const handleChange = (e) => {
       const { name, value } = e.target;
@@ -298,8 +335,16 @@ const OficinaModal = ({ isOpen, onClose, onSave, oficina }) => {
             <input type="number" id="vagas" name="vagas" value={formData.vagas} onChange={handleChange} required min="0" />
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor="local">Local</label>
+            <SelectInput 
+              label="Local" 
+              items={salas} 
+              value={formData.local}
+              onChange={handleChange}
+              name="local"
+            />
+            {/*<label htmlFor="local">Local</label>
             <input type="text" id="local" name="local" value={formData.local} onChange={handleChange} required />
+            */}
           </div>
            <div className={styles.formGroup}>
             <label htmlFor="dataInicio">Data de Início</label>
