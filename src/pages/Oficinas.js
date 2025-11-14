@@ -17,10 +17,12 @@ export default function Oficinas() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   // Usar o AuthContext para pegar o token e o perfil do usuário
   const { token, user } = useContext(AuthContext);
   const userRole = user?.role;
+  const userId = user?.uid;
 
   // Buscar dados da API ao montar o componente
   useEffect(() => {
@@ -150,9 +152,82 @@ export default function Oficinas() {
     }
   };
 
+const isAlunoInscrito = (oficina) => {
+  return oficina.alunosInscritos?.includes(userId);
+};
+
+// Função para inscrever o aluno
+const handleInscrever = async (oficinaId) => {
+  if (!token) {
+    setError("Sua sessão expirou. Faça login novamente.");
+    return;
+  }
+
+  setError(null);
+  setSuccessMessage(null);
+
+  try {
+    const response = await fetch(`http://localhost:8000/api/oficinas/${oficinaId}/inscrever`, {
+      method: 'POST',
+      headers: { 'Authorization': token }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Falha ao realizar inscrição.');
+    }
+
+    setSuccessMessage('Inscrição realizada com sucesso!');
+    fetchAgain();
+    
+    setTimeout(() => setSuccessMessage(null), 3000);
+  } catch (err) {
+    setError(err.message);
+  }
+};
+
+const handleCancelarInscricao = async (oficinaId) => {
+  if (!token) {
+    setError("Sua sessão expirou. Faça login novamente.");
+    return;
+  }
+
+  setError(null);
+  setSuccessMessage(null);
+
+  try {
+    const response = await fetch(`http://localhost:8000/api/oficinas/${oficinaId}/inscrever`, {
+      method: 'DELETE',
+      headers: { 'Authorization': token }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Falha ao cancelar inscrição.');
+    }
+
+    setSuccessMessage('Inscrição cancelada com sucesso!');
+    fetchAgain();
+    
+    setTimeout(() => setSuccessMessage(null), 3000);
+  } catch (err) {
+    setError(err.message);
+  }
+};
+
+const getVagasInfo = (oficina) => {
+  const inscritos = oficina.alunosInscritos?.length || 0;
+  const total = oficina.vagas;
+  const disponivel = total - inscritos;
+  return { inscritos, total, disponivel };
+};
+
   return (
     <div className={styles.container}>
       {error && <div className={styles.error}>{error}</div>}
+      {successMessage && <div className={styles.success}>{successMessage}</div>}
       <div className={styles.header}>
         <h2 className={styles.title}>Gerenciar Oficinas</h2>
         <div className={styles.headerActions}>
@@ -180,14 +255,16 @@ export default function Oficinas() {
               <th>Vagas</th>
               <th>Local</th>
               <th>Data</th>
+              {userRole === 'aluno' && <th className={styles.actionsHeader}>Ações</th>}
               {userRole === 'professor' && <th className={styles.actionsHeader}>Ações</th>}
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
-              <tr><td colSpan={userRole === 'professor' ? 6 : 5} className={styles.loading}>Carregando...</td></tr>
+              //<tr><td colSpan={userRole === 'professor' ? 6 : 5} className={styles.loading}>Carregando...</td></tr>
+              <tr><td colSpan="6" className={styles.loading}>Carregando...</td></tr>
             ) : filteredOficinas.length > 0 ? (
-              filteredOficinas.map((oficina) => (
+              /*filteredOficinas.map((oficina) => (
                 <tr key={oficina.id}>
                   <td>{oficina.tema}</td>
                   <td>{oficina.professor}</td>
@@ -205,10 +282,67 @@ export default function Oficinas() {
                     </td>
                   )}
                 </tr>
-              ))
+              ))*/
+              filteredOficinas.map((oficina) => {
+                const vagasInfo = getVagasInfo(oficina);
+                const estaInscrito = isAlunoInscrito(oficina);
+                const semVagas = vagasInfo.disponivel <= 0;
+
+                return (
+                  <tr key={oficina.id}>
+                    <td>{oficina.tema}</td>
+                    <td>{oficina.professor}</td>
+                    <td className={styles.centerText}>
+                      <span className={semVagas ? styles.vagasEsgotadas : styles.vagasDisponiveis}>
+                        {vagasInfo.inscritos}/{vagasInfo.total}
+                      </span>
+                    </td>
+                    <td>{oficina.local}</td>
+                    <td>{dayjs(oficina.dataInicio).format('DD/MM/YYYY HH:mm')}</td>
+                    
+                    {/* Botões para Alunos */}
+                    {userRole === 'aluno' && (
+                      <td className={styles.actions}>
+                        {estaInscrito ? (
+                          <button 
+                            className={`${styles.actionButton} ${styles.cancelarButton}`}
+                            onClick={() => handleCancelarInscricao(oficina.id)}
+                          >
+                            Cancelar Inscrição
+                          </button>
+                        ) : (
+                          <button 
+                            className={`${styles.actionButton} ${styles.inscreverButton}`}
+                            onClick={() => handleInscrever(oficina.id)}
+                            disabled={semVagas}
+                          >
+                            {semVagas ? 'Sem Vagas' : 'Inscrever-se'}
+                          </button>
+                        )}
+                      </td>
+                    )}
+
+                    {/* Botões para Professores */}
+                    {userRole === 'professor' && (
+                      <td className={styles.actions}>
+                        <button className={`${styles.actionButton} ${styles.editButton}`} onClick={() => handleOpenModal(oficina)}>
+                          <EditIcon />
+                        </button>
+                        <button className={`${styles.actionButton} ${styles.deleteButton}`} onClick={() => handleOpenDeleteModal(oficina)}>
+                          <DeleteIcon />
+                        </button>
+                      </td>
+                    )}
+                  </tr>
+                );
+              }) // AQUIII
             ) : (
+              /*
               <tr>
                 <td colSpan={userRole === 'professor' ? 6 : 5} className={styles.emptyMessage}>Nenhuma oficina encontrada.</td>
+              </tr>*/
+              <tr>
+                <td colSpan="6" className={styles.emptyMessage}>Nenhuma oficina encontrada.</td>
               </tr>
             )}
           </tbody>
