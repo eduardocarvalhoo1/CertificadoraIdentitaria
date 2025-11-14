@@ -342,9 +342,6 @@ const OficinaModal = ({ isOpen, onClose, onSave, oficina }) => {
               onChange={handleChange}
               name="local"
             />
-            {/*<label htmlFor="local">Local</label>
-            <input type="text" id="local" name="local" value={formData.local} onChange={handleChange} required />
-            */}
           </div>
            <div className={styles.formGroup}>
             <label htmlFor="dataInicio">Data de Início</label>
