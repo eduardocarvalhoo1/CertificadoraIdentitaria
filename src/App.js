@@ -31,10 +31,10 @@ function App() {
               <Route path="/oficinas" element={<Oficinas />} />
               <Route path="/alunos" element={<Alunos />} />
               <Route path="/perfil" element={<Perfil />} />
+             <Route path="/professores" element={<Professores />} />  
             </Route>
             {/* Rotas exclusivas de professor */}
             <Route element={<ProtectedRoute roles={["professor"]} />}> 
-             <Route path="/professores" element={<Professores />} />  
             </Route>
           </Routes>
         </main>
