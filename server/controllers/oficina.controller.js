@@ -2,6 +2,7 @@ const Oficina = require('../models/oficina.model');
 const { db } = require("../config/firestoreConfig");
 const oficinasCollection = db.collection("oficinas");
 const usersCollection = db.collection("users");
+const { verifyVagas, datesOverlap } = require("../helpers/sala.helper");
 
 // Middleware para verificar se é professor
 async function isProfessor(req, res, next) {
@@ -47,7 +48,12 @@ async function createOficina(req, res) {
             dataFim,
             local
         });
+        const result = await verifyVagas(local, vagas);
 
+        if (!result.ok) throw new Error(result.message);
+
+        if (await datesOverlap(local, dataInicio, dataFim)) throw new Error("A sala não está disponível neste horário.")
+        
         await newOficinaRef.set(oficinaData);
         res.status(201).json({ message: "Oficina criada com sucesso", oficina: { id: newOficinaRef.id, ...oficinaData } });
     } catch (err) {

@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useContext } from 'react';
 import styles from './Oficinas.module.css';
 import Modal from '../components/Modal';
 import { AuthContext } from '../context/AuthContext'; // Importar AuthContext
+import dayjs from 'dayjs';
 
 // Ícones SVG
 const AddIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>;
@@ -22,7 +23,7 @@ export default function Oficinas() {
   // Usar o AuthContext para pegar o token e o perfil do usuário
   const { token, user } = useContext(AuthContext);
   const userRole = user?.role;
-  const userId = user?.uid;
+  const userId = user?.id;
 
   // Buscar dados da API ao montar o componente
   useEffect(() => {
@@ -302,7 +303,7 @@ const getVagasInfo = (oficina) => {
                     
                     {/* Botões para Alunos */}
                     {userRole === 'aluno' && (
-                      <td className={styles.actions}>
+                      <td className={styles.actionsAluno}>
                         {estaInscrito ? (
                           <button 
                             className={`${styles.actionButton} ${styles.cancelarButton}`}

@@ -137,6 +137,8 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    height: 500px;
+    overflow-y: auto;    
 }
   
 .formGroup {
@@ -177,7 +179,6 @@
   text-align: center;
 }
 
-/* Mensagem de sucesso */
 .success {
   background-color: #d4edda;
   color: #155724;
@@ -188,7 +189,6 @@
   text-align: center;
 }
 
-/* Botão de Inscrever-se (Azul) */
 .inscreverButton {
   background-color: #007bff;
   color: white;
@@ -199,6 +199,9 @@
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s ease;
+   width: auto;
+  height: auto; 
+  white-space: nowrap;
 }
 
 .inscreverButton:hover:not(:disabled) {
@@ -212,7 +215,6 @@
   opacity: 0.6;
 }
 
-/* Botão de Cancelar Inscrição (Vermelho) */
 .cancelarButton {
   background-color: #dc3545;
   color: white;
@@ -223,6 +225,9 @@
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s ease;
+   width: auto; 
+  height: auto; 
+  white-space: nowrap;
 }
 
 .cancelarButton:hover {
@@ -230,7 +235,6 @@
   transform: translateY(-1px);
 }
 
-/* Estilo para contador de vagas */
 .vagasDisponiveis {
   color: #28a745;
   font-weight: 600;
@@ -241,10 +245,11 @@
   font-weight: 600;
 }
 
-/* Ajuste na coluna de ações para acomodar botões maiores */
-.actions {
+.actionsAluno {
   display: flex;
   gap: 8px;
   justify-content: center;
   align-items: center;
+  text-align: center !important;
+  width: 100%;
 }
