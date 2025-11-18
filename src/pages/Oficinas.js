@@ -256,7 +256,7 @@ const getVagasInfo = (oficina) => {
               <th>Vagas</th>
               <th>Local</th>
               <th>Data</th>
-              {userRole === 'aluno' && <th className={styles.actionsHeader}>Ações</th>}
+              {userRole === 'aluno' } 
               {userRole === 'professor' && <th className={styles.actionsHeader}>Ações</th>}
             </tr>
           </thead>
@@ -302,26 +302,26 @@ const getVagasInfo = (oficina) => {
                     <td>{dayjs(oficina.dataInicio).format('DD/MM/YYYY HH:mm')}</td>
                     
                     {/* Botões para Alunos */}
-                    {userRole === 'aluno' && (
-                      <td className={styles.actionsAluno}>
-                        {estaInscrito ? (
-                          <button 
-                            className={`${styles.actionButton} ${styles.cancelarButton}`}
-                            onClick={() => handleCancelarInscricao(oficina.id)}
-                          >
-                            Cancelar Inscrição
-                          </button>
-                        ) : (
-                          <button 
-                            className={`${styles.actionButton} ${styles.inscreverButton}`}
-                            onClick={() => handleInscrever(oficina.id)}
-                            disabled={semVagas}
-                          >
-                            {semVagas ? 'Sem Vagas' : 'Inscrever-se'}
-                          </button>
-                        )}
-                      </td>
-                    )}
+                   
+                    <td className={styles.actionsAluno}>
+                      {estaInscrito ? (
+                        <button 
+                          className={styles.cancelarButton}
+                          onClick={() => handleCancelarInscricao(oficina.id)}
+                        >
+                          Cancelar Inscrição
+                        </button>
+                      ) : (
+                        <button 
+                          className={styles.inscreverButton}
+                          onClick={() => handleInscrever(oficina.id)}
+                          disabled={semVagas}
+                        >
+                          {semVagas ? 'Sem Vagas' : 'Inscrever-se'}
+                        </button>
+                      )}
+                    </td>
+
 
                     {/* Botões para Professores */}
                     {userRole === 'professor' && (
