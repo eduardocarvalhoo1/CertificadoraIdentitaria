@@ -255,35 +255,15 @@ const getVagasInfo = (oficina) => {
               <th>Professor</th>
               <th>Vagas</th>
               <th>Local</th>
-              <th>Data</th>
-              {userRole === 'aluno' } 
+              <th>Data</th> 
               {userRole === 'professor' && <th className={styles.actionsHeader}>Ações</th>}
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
-              //<tr><td colSpan={userRole === 'professor' ? 6 : 5} className={styles.loading}>Carregando...</td></tr>
               <tr><td colSpan="6" className={styles.loading}>Carregando...</td></tr>
             ) : filteredOficinas.length > 0 ? (
-              /*filteredOficinas.map((oficina) => (
-                <tr key={oficina.id}>
-                  <td>{oficina.tema}</td>
-                  <td>{oficina.professor}</td>
-                  <td className={styles.centerText}>{oficina.vagas}</td>
-                  <td>{oficina.local}</td>
-                  <td>{oficina.dataInicio}</td>
-                  {userRole === 'professor' && (
-                    <td className={styles.actions}>
-                      <button className={`${styles.actionButton} ${styles.editButton}`} onClick={() => handleOpenModal(oficina)}>
-                        <EditIcon />
-                      </button>
-                      <button className={`${styles.actionButton} ${styles.deleteButton}`} onClick={() => handleOpenDeleteModal(oficina)}>
-                        <DeleteIcon />
-                      </button>
-                    </td>
-                  )}
-                </tr>
-              ))*/
+              
               filteredOficinas.map((oficina) => {
                 const vagasInfo = getVagasInfo(oficina);
                 const estaInscrito = isAlunoInscrito(oficina);
@@ -303,16 +283,17 @@ const getVagasInfo = (oficina) => {
                     
                     {/* Botões para Alunos */}
                    
+                  {userRole === 'aluno' && (
                     <td className={styles.actionsAluno}>
                       {estaInscrito ? (
-                        <button 
+                        <button
                           className={styles.cancelarButton}
                           onClick={() => handleCancelarInscricao(oficina.id)}
                         >
                           Cancelar Inscrição
                         </button>
                       ) : (
-                        <button 
+                        <button
                           className={styles.inscreverButton}
                           onClick={() => handleInscrever(oficina.id)}
                           disabled={semVagas}
@@ -321,6 +302,8 @@ const getVagasInfo = (oficina) => {
                         </button>
                       )}
                     </td>
+                  )}
+
 
 
                     {/* Botões para Professores */}
@@ -336,12 +319,9 @@ const getVagasInfo = (oficina) => {
                     )}
                   </tr>
                 );
-              }) // AQUIII
+              }) 
             ) : (
-              /*
-              <tr>
-                <td colSpan={userRole === 'professor' ? 6 : 5} className={styles.emptyMessage}>Nenhuma oficina encontrada.</td>
-              </tr>*/
+              
               <tr>
                 <td colSpan="6" className={styles.emptyMessage}>Nenhuma oficina encontrada.</td>
               </tr>
