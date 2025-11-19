@@ -146,30 +146,6 @@ export default function Oficinas() {
     }
   };
 
-  const handleSubscribe = async (oficina) => {
-    if (!token) {
-        setError("Sua sessão expirou. Faça login novamente.");
-        return;
-    }
-      try {
-        const response = await fetch(`http://localhost:8000/api/oficinas/${oficina.id}/inscrever`, {
-            method: 'POST',
-            headers: { 'Authorization': token },
-            body: {
-              userId: user.userId 
-            }
-        });
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Falha ao inscrever na oficina.');
-        }
-        console.log(oficina);
-        setError(`Inscrição na oficina '${oficina.tema}' realizada com sucesso!`)
-      } catch (err) {
-        setError(err.message);
-      }
-  };
-
   const confirmDelete = () => {
     if (oficinaToDelete) {
       handleDelete(oficinaToDelete.id);
