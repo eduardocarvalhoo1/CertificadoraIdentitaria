@@ -21,10 +21,12 @@ export default function Oficinas() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   // Usar o AuthContext para pegar o token e o perfil do usuário
   const { token, user } = useContext(AuthContext);
   const userRole = user?.role;
+  const userId = user?.id;
 
   // Buscar dados da API ao montar o componente
   useEffect(() => {
@@ -147,30 +149,6 @@ export default function Oficinas() {
     }
   };
 
-  const handleSubscribe = async (oficina) => {
-    if (!token) {
-        setError("Sua sessão expirou. Faça login novamente.");
-        return;
-    }
-      try {
-        const response = await fetch(`http://localhost:8000/api/oficinas/${oficina.id}/inscrever`, {
-            method: 'POST',
-            headers: { 'Authorization': token },
-            body: {
-              userId: user.userId 
-            }
-        });
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Falha ao inscrever na oficina.');
-        }
-        console.log(oficina);
-        setError(`Inscrição na oficina '${oficina.tema}' realizada com sucesso!`)
-      } catch (err) {
-        setError(err.message);
-      }
-  };
-
   const confirmDelete = () => {
     if (oficinaToDelete) {
       handleDelete(oficinaToDelete.id);
@@ -178,9 +156,82 @@ export default function Oficinas() {
     }
   };
 
+  const isAlunoInscrito = (oficina) => {
+    return oficina.alunosInscritos?.includes(userId);
+  };
+
+  // Função para inscrever o aluno
+  const handleInscrever = async (oficinaId) => {
+    if (!token) {
+      setError("Sua sessão expirou. Faça login novamente.");
+      return;
+    }
+
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      const response = await fetch(`http://localhost:8000/api/oficinas/${oficinaId}/inscrever`, {
+        method: 'POST',
+        headers: { 'Authorization': token }
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Falha ao realizar inscrição.');
+      }
+
+      setSuccessMessage('Inscrição realizada com sucesso!');
+      fetchAgain();
+
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleCancelarInscricao = async (oficinaId) => {
+    if (!token) {
+      setError("Sua sessão expirou. Faça login novamente.");
+      return;
+    }
+
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      const response = await fetch(`http://localhost:8000/api/oficinas/${oficinaId}/inscrever`, {
+        method: 'DELETE',
+        headers: { 'Authorization': token }
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Falha ao cancelar inscrição.');
+      }
+
+      setSuccessMessage('Inscrição cancelada com sucesso!');
+      fetchAgain();
+
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const getVagasInfo = (oficina) => {
+    const inscritos = oficina.alunosInscritos?.length || 0;
+    const total = oficina.vagas;
+    const disponivel = total - inscritos;
+    return { inscritos, total, disponivel };
+  };
+
   return (
     <div className={styles.container}>
       {error && <div className={styles.error}>{error}</div>}
+      {successMessage && <div className={styles.success}>{successMessage}</div>}
       <div className={styles.header}>
         <h2 className={styles.title}>Gerenciar Oficinas</h2>
         <div className={styles.headerActions}>
@@ -213,37 +264,71 @@ export default function Oficinas() {
           </thead>
           <tbody>
             {isLoading ? (
-              <tr><td colSpan={userRole === 'professor' ? 6 : 5} className={styles.loading}>Carregando...</td></tr>
+              <tr><td colSpan="6" className={styles.loading}>Carregando...</td></tr>
             ) : filteredOficinas.length > 0 ? (
-              filteredOficinas.map((oficina) => (
-                <tr key={oficina.id}>
-                  <td>{oficina.tema}</td>
-                  <td>{oficina.professor}</td>
-                  <td className={styles.centerText}>{oficina.vagas}</td>
-                  <td>{oficina.local}</td>
-                  <td>{dayjs(oficina.dataInicio).format('DD/MM/YYYY HH:mm')}</td>
-                  {userRole === 'professor' && (
-                    <td className={styles.actions}>
-                      <button className={`${styles.actionButton} ${styles.editButton}`} onClick={() => handleOpenModal(oficina)}>
-                        <EditIcon />
-                      </button>
-                      <button className={`${styles.actionButton} ${styles.deleteButton}`} onClick={() => handleOpenDeleteModal(oficina)}>
-                        <DeleteIcon />
-                      </button>
-                    </td>
-                  )}
-                  {userRole === 'aluno' && (
-                    <td className={styles.actions}>
-                      <button className={`${styles.actionButton} ${styles.editButton}`} onClick={() => handleSubscribe(oficina)}>
-                        <AddIcon />
-                      </button>
-                    </td>
-                  )}
-                </tr>
-              ))
+               filteredOficinas.map((oficina) => {
+                  const vagasInfo = getVagasInfo(oficina);
+                  const estaInscrito = isAlunoInscrito(oficina);
+                  const semVagas = vagasInfo.disponivel <= 0;
+
+                  return (
+                    <tr key={oficina.id}>
+                      <td>{oficina.tema}</td>
+                      <td>{oficina.professor}</td>
+                      <td className={styles.centerText}>
+                        <span className={semVagas ? styles.vagasEsgotadas : styles.vagasDisponiveis}>
+                          {vagasInfo.inscritos}/{vagasInfo.total}
+                        </span>
+                      </td>
+                      {/* ✅ ADICIONAR as células que estavam faltando: */}
+                      <td>{oficina.local}</td>
+                      <td>{dayjs(oficina.dataInicio).format('DD/MM/YYYY HH:mm')}</td>
+                      
+                      {/* Ações para Alunos */}
+                      {userRole === 'aluno' && (
+                        <td className={styles.actionsAluno}>
+                          {estaInscrito ? (
+                            <button
+                              className={styles.cancelarButton}
+                              onClick={() => handleCancelarInscricao(oficina.id)}
+                            >
+                              Cancelar Inscrição
+                            </button>
+                          ) : (
+                            <button
+                              className={styles.inscreverButton}
+                              onClick={() => handleInscrever(oficina.id)}
+                              disabled={semVagas}
+                            >
+                              {semVagas ? 'Sem Vagas' : 'Inscrever-se'}
+                            </button>
+                          )}
+                        </td>
+                      )}
+
+                      {/* Ações para Professores */}
+                      {userRole === 'professor' && (
+                        <td className={styles.actions}>
+                          <button 
+                            className={`${styles.actionButton} ${styles.editButton}`} 
+                            onClick={() => handleOpenModal(oficina)}
+                          >
+                            <EditIcon />
+                          </button>
+                          <button 
+                            className={`${styles.actionButton} ${styles.deleteButton}`} 
+                            onClick={() => handleOpenDeleteModal(oficina)}
+                          >
+                            <DeleteIcon />
+                          </button>
+                        </td>
+                      )}
+                    </tr>
+                  );
+                })
             ) : (
               <tr>
-                <td colSpan={userRole === 'professor' ? 6 : 5} className={styles.emptyMessage}>Nenhuma oficina encontrada.</td>
+                <td colSpan="6" className={styles.emptyMessage}>Nenhuma oficina encontrada.</td>
               </tr>
             )}
           </tbody>
