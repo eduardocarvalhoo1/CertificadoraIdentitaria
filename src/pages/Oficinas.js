@@ -6,6 +6,7 @@ import DTPicker from '../components/DateTimePicker';
 import 'dayjs/locale/en-gb';
 import dayjs from 'dayjs';
 import SelectInput from '../components/SelectInput';
+import { useNavigate } from 'react-router-dom';
 
 // Ícones SVG
 const AddIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>;
@@ -22,6 +23,7 @@ export default function Oficinas() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const navigate = useNavigate();
 
   // Usar o AuthContext para pegar o token e o perfil do usuário
   const { token, user } = useContext(AuthContext);
@@ -273,7 +275,18 @@ export default function Oficinas() {
 
                   return (
                     <tr key={oficina.id}>
-                      <td>{oficina.tema}</td>
+                      <td>
+                          {userRole === 'professor' ? (
+                          <span 
+                            className={styles.oficinaLink} 
+                            onClick={() => navigate(`/oficinas/${oficina.id}/inscritos`)}
+                          >
+                            {oficina.tema}
+                          </span>
+                        ) : (
+                          oficina.tema
+                        )}
+                      </td>
                       <td>{oficina.professor}</td>
                       <td className={styles.centerText}>
                         <span className={semVagas ? styles.vagasEsgotadas : styles.vagasDisponiveis}>
@@ -437,6 +450,7 @@ const OficinaModal = ({ isOpen, onClose, onSave, oficina }) => {
   
     return (
       <Modal isOpen={isOpen} onClose={onClose} title={oficina ? 'Editar Oficina' : 'Adicionar Oficina'}>
+        {error && <div className={styles.error}>{error}</div>}
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
             <label htmlFor="tema">Tema</label>
@@ -457,7 +471,9 @@ const OficinaModal = ({ isOpen, onClose, onSave, oficina }) => {
               value={formData.local}
               onChange={handleChange}
               name="local"
+              disabled={isLoading}
             />
+            {isLoading && <small className={styles.loadingText}>Carregando salas...</small>}
           </div>
            <div className={styles.formGroup}>
             <label htmlFor="dataInicio">Data de Início</label>

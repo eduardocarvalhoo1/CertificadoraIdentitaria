@@ -9,6 +9,7 @@ import Professores from './pages/Professores';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Perfil from './pages/Perfil'; 
+import AlunosInscritos from './pages/AlunosInscritos';
 import styles from './App.module.css';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { useTokenExpiration } from './hooks/useTokenExpiration';
@@ -35,6 +36,7 @@ function App() {
             </Route>
             {/* Rotas exclusivas de professor */}
             <Route element={<ProtectedRoute roles={["professor"]} />}> 
+              <Route path="/oficinas/:id/inscritos" element={<AlunosInscritos />} />
             </Route>
           </Routes>
         </main>
