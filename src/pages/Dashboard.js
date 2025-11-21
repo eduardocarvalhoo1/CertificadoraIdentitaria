@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import DashboardCard from '../components/DashboardCard';
 import styles from './Dashboard.module.css';
+import dayjs from 'dayjs';
 // import { AuthContext } from '../context/AuthContext'; // Não precisamos mais do AuthContext aqui
 
 // Ícones SVG para os cards
@@ -9,37 +10,23 @@ const AlunosIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" heig
 const ProfessoresIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" /><circle cx="12" cy="10" r="3" /></svg>;
 const TemasIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>;
 
-// Dados estáticos para o gráfico e próximas oficinas (poderiam vir da API também)
-const workshopsData = [
-    { name: 'Robótica', students: 45 },
-    { name: 'Web Dev', students: 60 },
-    { name: 'IA', students: 25 },
-    { name: 'Design', students: 20 },
-];
-
-const upcomingWorkshops = [
-    { title: "Fotografia para Iniciantes", date: "25/09/2025" },
-    { title: "Marketing Digital", date: "28/09/2025" },
-    { title: "Gestão de Projetos", date: "02/10/2025" },
-];
-
 // --- Componentes internos (Chart, UpcomingWorkshops) permanecem os mesmos ---
 const Chart = ({ data }) => {
-    const maxValue = data.length > 0 ? Math.max(...data.map(item => item.students)) : 1;
+    const maxValue = data.length > 0 ? Math.max(...data.map(item => item.alunosInscritos.length)) : 1;
     return (
         <div className={styles.chart}>
-            <h3 className={styles.sectionTitle}>Alunos por Oficina (Estático)</h3>
+            <h3 className={styles.sectionTitle}>Alunos por Oficina</h3>
             <div className={styles.chartBars}>
                 {data.map((item, index) => (
                     <div key={index} className={styles.chartBarWrapper}>
                         <div
                             className={styles.chartBar}
-                            style={{ height: `${(item.students / maxValue) * 100}%` }}
-                            title={`${item.name}: ${item.students} alunos`}
+                            style={{ height: `${(item.alunosInscritos.length / maxValue) * 100}%` }}
+                            title={`${item.tema}: ${item.alunosInscritos.length} alunos`}
                         >
-                            <span className={styles.barValue}>{item.students}</span>
+                            <span className={styles.barValue}>{item.alunosInscritos.length}</span>
                         </div>
-                        <span className={styles.barLabel}>{item.name}</span>
+                        <span className={styles.barLabel}>{item.tema}</span>
                     </div>
                 ))}
             </div>
@@ -49,29 +36,30 @@ const Chart = ({ data }) => {
 
 const UpcomingWorkshops = ({ workshops }) => (
     <div className={styles.upcomingWorkshops}>
-        <h3 className={styles.sectionTitle}>Próximas Oficinas (Estático)</h3>
+        <h3 className={styles.sectionTitle}>Próximas Oficinas</h3>
         <ul>
             {workshops.map((workshop, index) => (
-                <li key={index}>
-                    <span>{workshop.title}</span>
-                    <span className={styles.workshopDate}>{workshop.date}</span>
-                </li>
-            ))}
-        </ul>
-    </div>
-);
-// --- Fim dos componentes internos ---
+                    <li key={index}>
+                        <span>{workshop.tema}</span>
+                        <span className={styles.workshopDate}>{dayjs(workshop.dataInicio).format('DD/MM/YYYY HH:mm')}</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+    // --- Fim dos componentes internos ---
 
 
-export default function Dashboard() {
-  // const { token } = useContext(AuthContext); // Não precisamos mais do token aqui
-  const [stats, setStats] = useState([
-    { title: "Total de Oficinas", value: "0", icon: <OficinasIcon />, color: "blue" },
-    { title: "Total de Alunos", value: "0", icon: <AlunosIcon />, color: "green" },
+    export default function Dashboard() {
+      // const { token } = useContext(AuthContext); // Não precisamos mais do token aqui
+      const [stats, setStats] = useState([
+        { title: "Total de Oficinas", value: "0", icon: <OficinasIcon />, color: "blue" },
+        { title: "Total de Alunos", value: "0", icon: <AlunosIcon />, color: "green" },
     { title: "Professores e Tutores", value: "0", icon: <ProfessoresIcon />, color: "orange" },
     // O card de "Temas" será igual ao de "Oficinas" por enquanto
     { title: "Temas (Oficinas)", value: "0", icon: <TemasIcon />, color: "purple" },
   ]);
+  const [upcomingWorkshops, setUpcomingWorkshops] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -105,6 +93,7 @@ export default function Dashboard() {
           { title: "Professores e Tutores", value: data.totalProfessores.toString(), icon: <ProfessoresIcon />, color: "orange" },
           { title: "Temas (Oficinas)", value: data.totalOficinas.toString(), icon: <TemasIcon />, color: "purple" },
         ]);
+        setUpcomingWorkshops(data.oficinas);
 
       } catch (err) {
         setError(err.message);
@@ -137,7 +126,7 @@ export default function Dashboard() {
 
       <div className={styles.bottomSection}>
           {/* Estes gráficos ainda são estáticos, mas poderiam ser alimentados pela API */}
-          <Chart data={workshopsData} />
+          <Chart data={upcomingWorkshops} />
           <UpcomingWorkshops workshops={upcomingWorkshops} />
       </div>
     </div>

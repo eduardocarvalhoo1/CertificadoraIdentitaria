@@ -244,8 +244,6 @@ async function getAlunosInscritos(req, res) {
     }
 }
 
-
-
 module.exports = {
     isProfessor,
     getAllOficinas,
