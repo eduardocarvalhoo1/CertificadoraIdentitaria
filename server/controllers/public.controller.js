@@ -23,10 +23,18 @@ async function getDashboardStats(req, res) {
         const tutorSnapshot = await usersCollection.where("role", "==", "tutor").count().get();
         const totalProfessores = profSnapshot.data().count + tutorSnapshot.data().count;
 
+        // Lista as oficinas com a data mais próxima do presente
+        const now = new Date().toISOString();
+        const snapshot = await oficinasCollection.where("dataInicio", ">=", now).orderBy("dataInicio", "asc").limit(3).get();
+        const oficinas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+
+
         res.status(200).json({
             totalOficinas: totalOficinas,
             totalAlunos: totalAlunos,
             totalProfessores: totalProfessores,
+            oficinas: oficinas
         });
 
     } catch (err) {
