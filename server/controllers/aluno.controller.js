@@ -21,7 +21,7 @@ async function getAllAlunos(req, res) {
 async function createAluno(req, res) {
     try {
         const userDoc = await usersCollection.doc(req.userId).get();
-        if (!userDoc.exists || userDoc.data().role !== 'Professor') {
+        if (!userDoc.exists || userDoc.data().role !== 'professor') {
             return res.status(403).json({ error: "Acesso negado. Somente professores podem criar alunos." });
         }
 
@@ -49,7 +49,7 @@ async function createAluno(req, res) {
 async function updateAluno(req, res) {
     try {
         const userDocCheck = await usersCollection.doc(req.userId).get();
-        if (!userDocCheck.exists || userDocCheck.data().role !== 'Professor') {
+        if (!userDocCheck.exists || userDocCheck.data().role !== 'professor') {
             return res.status(403).json({ error: "Acesso negado. Somente professores podem editar alunos." });
         }
 
@@ -84,7 +84,7 @@ async function updateAluno(req, res) {
 async function deleteAluno(req, res) {
     try {
         const userDoc = await usersCollection.doc(req.userId).get();
-        if (!userDoc.exists || userDoc.data().role !== 'Professor') {
+        if (!userDoc.exists || userDoc.data().role !== 'professor') {
             return res.status(403).json({ error: "Acesso negado. Somente professores podem excluir alunos." });
         }
 
