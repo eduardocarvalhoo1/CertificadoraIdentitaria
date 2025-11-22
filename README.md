@@ -114,8 +114,8 @@ Gerenciamento dos locais onde as oficinas acontecem.
 ```bash
 git clone https://github.com/seu-usuario/oficinas-plus.git
 cd server
-create server/config/.env (JWT_SECRET)
-create server/config/serviceAccountKey.json
+create file server/config/.env (JWT_SECRET)
+paste file server/config/serviceAccountKey.json
 npm install
 npm start
 ```
@@ -133,6 +133,13 @@ npm start
 
 Projeto desenvolvido como requisito avaliativo da disciplina:
 **AS65A - Certificadora de Competência Identitária - N15 (2025_02)**
+
+### 👥 Membros
+- Eduardo Carvalho de Oliveira - RA: 2614529 
+- Júlio Cézar Bandeira Covary - RA: 2612224 
+- Luan Venicios Salomão de Almeida - RA: 2564220 
+- Matheus Faustino Meneguim - RA: 2564823 
+- Murillo Tadeu Amadeu - RA: 2564246
 
 ---
 
