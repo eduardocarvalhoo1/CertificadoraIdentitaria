@@ -1,70 +1,141 @@
-# Getting Started with Create React App
+# Oficinas+
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Projeto final da disciplina **AS65A - Certificadora de Competência Identitária - N15 (2025_02)**.
 
-## Available Scripts
+O **Oficinas+** é uma aplicação full stack que permite o gerenciamento de oficinas, alunos, professores e inscrições, oferecendo uma visão pública para consulta e um ambiente autenticado para administração.
 
-In the project directory, you can run:
-### `CD projetooficina`
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 📌 Objetivo do Projeto
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+O objetivo do sistema é facilitar a organização e o controle de oficinas acadêmicas, permitindo:
 
-### `npm test`
+* Cadastro e gerenciamento de oficinas
+* Inscrição e cancelamento de alunos
+* Visualização pública das oficinas disponíveis
+* Gerenciamento de alunos e professores
+* Administração de salas (locais das oficinas)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 🛠 Tecnologias Utilizadas
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Backend
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* Node.js
+* Express.js
+* Firebase Firestore
+* JSON Web Token (JWT)
+* Bcrypt
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Frontend
 
-### `npm run eject`
+* React (Web)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🔐 Autenticação
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+O sistema utiliza autenticação baseada em:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+* **JWT (JSON Web Token)** para controle de sessão
+* **Bcrypt** para criptografia das senhas
 
-## Learn More
+As rotas protegidas exigem que o usuário esteja autenticado.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 📂 Estrutura das Rotas
 
-### Code Splitting
+### 🔓 Rotas Públicas
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+* `GET /api/public`
 
-### Analyzing the Bundle Size
+  * Retorna os dados públicos para o dashboard inicial.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 🔐 Rotas de Autenticação
 
-### Making a Progressive Web App
+* `POST /api/auth/login`
+* `POST /api/auth/register`
+* `PUT /api/auth/profile/:id`
+* `PUT /api/auth/password/:id`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Gerenciamento de usuários com login e cadastro.
 
-### Advanced Configuration
+### 📘 Documentação
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+* `GET /api/docs`
 
-### Deployment
+  * Exibe a documentação da API via Swagger.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### 👨‍🏫 Professores
 
-### `npm run build` fails to minify
+* `GET /api/professor`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+  * Lista todos os usuários que possuem perfil de professor.
+
+### 👩‍🎓 Alunos
+
+* `GET /api/alunos`
+* `POST /api/alunos`
+* `PUT /api/alunos/:id`
+* `DELETE /api/alunos/:id`
+
+Gerenciamento completo dos alunos.
+
+### 🛠 Oficinas
+
+* `GET /api/oficinas`
+* `POST /api/oficinas`
+* `PUT /api/oficinas/:id`
+* `DELETE /api/oficinas/:id`
+* `POST /api/oficinas/:id/inscrever`
+* `DELETE /api/oficinas/:id/inscrever`
+* `GET /api/oficinas/:id/inscritos`
+
+Gerenciamento das oficinas e das inscrições.
+
+### 🏫 Salas
+
+* `GET /api/salas`
+* `GET /api/salas/:id`
+* `POST /api/salas`
+* `PUT /api/salas/:id`
+* `DELETE /api/salas/:id`
+
+Gerenciamento dos locais onde as oficinas acontecem.
+
+---
+
+## 🚀 Como Rodar o Projeto
+
+### Backend
+
+```bash
+git clone https://github.com/seu-usuario/oficinas-plus.git
+cd server
+create server/config/.env (JWT_SECRET)
+create server/config/serviceAccountKey.json
+npm install
+npm start
+```
+
+### Frontend
+
+```bash
+npm install
+npm start
+```
+
+---
+
+## 👨‍🎓 Disciplina
+
+Projeto desenvolvido como requisito avaliativo da disciplina:
+**AS65A - Certificadora de Competência Identitária - N15 (2025_02)**
+
+---
+
+## 📄 Licença
+
+Projeto com finalidade exclusivamente educacional.
