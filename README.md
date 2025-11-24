@@ -105,6 +105,10 @@ O sistema utiliza o *Firebase Firestore* (em nuvem). Não é necessária a insta
 
 ## 🚀 7. Roteiro para Instalação e Execução
 
+## Requisitos
+* Ter o Node instalado (versão recomendada: 20 ou superior)
+* Ter o Banco de dados Firebase configurado
+
 ### Passo 1: Clonar o Repositório
 ```bash
 git clone https://github.com/eduardocarvalhoo1/CertificadoraIdentitaria.git
