@@ -86,7 +86,8 @@ Abaixo estão os principais endpoints disponíveis na API:
 * GET /api/oficinas - Lista oficinas.
 * POST /api/oficinas - Cria nova oficina (Professor).
 * POST /api/oficinas/:id/inscrever - Realiza inscrição do aluno.
-* GET /api/oficinas/:id/inscritos - Lista de presença.
+* DELETE /api/oficinas/:id/inscrever - Cancela a inscrição do aluno.
+* GET /api/oficinas/:id/inscritos - Lista os alunos inscritos na oficina.
 
 ---
 
@@ -106,27 +107,37 @@ O sistema utiliza o *Firebase Firestore* (em nuvem). Não é necessária a insta
 
 ### Passo 1: Clonar o Repositório
 ```bash
-git clone [https://github.com/eduardocarvalhoo1/CertificadoraIdentitaria.git](https://github.com/eduardocarvalhoo1/CertificadoraIdentitaria.git)
-cd CertificadoraIdentitaria
+git clone https://github.com/eduardocarvalhoo1/CertificadoraIdentitaria.git
+```
 
 ### Passo 2: Configurar e Rodar o backend
-1. Acesse a pasta do servidor: 
+1. Acesse a pasta do servidor:
+```bash
 cd server
+```
 
-2. Configuração de Credenciais: 
+3. Configuração de Credenciais: 
 Certifique-se de que colou os arquivos serviceAccountKey.json e .env na pasta server/config/.
 
-3. Instale as dependências e inicie:
+4. Instale as dependências e inicie:
+```bash
 npm install
+```
+```bash
 npm start
+```
 
 Sucesso: O terminal exibirá "Server running on port 8000" e "✅ Firestore connection OK".
 
 ### Passo 3: Rodar o frontend
 1. Abra um novo terminal na raiz do projeto
 2. Instale as dependências e inicie:
+```bash
 npm install
+```
+```bash
 npm start
+```
 3. O navegador abrirá automaticamente o endereço local (ex: http://localhost:3000).
 
 ## 🧪 8. Roteiro de Testes
