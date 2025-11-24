@@ -120,14 +120,14 @@ Certifique-se de que colou os arquivos serviceAccountKey.json e .env na pasta se
 npm install
 npm start
 
-Sucesso: O terminal exibirá "Server running on port 3000" e "Firebase connected".
+Sucesso: O terminal exibirá "Server running on port 8000" e "✅ Firestore connection OK".
 
 ### Passo 3: Rodar o frontend
 1. Abra um novo terminal na raiz do projeto
 2. Instale as dependências e inicie:
 npm install
 npm start
-3. O navegador abrirá automaticamente o endereço local (ex: http://localhost:5173).
+3. O navegador abrirá automaticamente o endereço local (ex: http://localhost:3000).
 
 ## 🧪 8. Roteiro de Testes
 8.1. Contas de Acesso Padrão
