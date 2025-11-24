@@ -293,7 +293,7 @@ export default function Oficinas() {
                           {vagasInfo.inscritos}/{vagasInfo.total}
                         </span>
                       </td>
-                      {/* ✅ ADICIONAR as células que estavam faltando: */}
+                    
                       <td>{oficina.local}</td>
                       <td>{dayjs(oficina.dataInicio).format('DD/MM/YYYY HH:mm')}</td>
                       
