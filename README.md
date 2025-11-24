@@ -73,6 +73,11 @@ Abaixo estão os principais endpoints disponíveis na API:
 * POST /api/auth/register - Cadastro de novos usuários.
 * GET /api/docs - Documentação Swagger.
 
+### 👤 User
+* GET /api/auth/profile/:id - Busca o perfil do usuário
+* PUT /api/auth/profile/:id - Atualiza o perfil do usuário
+* PUT /api/auth/password/:id - Atualiza a senha do usuário
+
 ### 👨‍🏫 Professores e Salas
 * GET /api/professor - Lista professores cadastrados.
 * GET /api/salas - Lista locais disponíveis.
@@ -101,6 +106,27 @@ O sistema utiliza o *Firebase Firestore* (em nuvem). Não é necessária a insta
 3.  Extraia o arquivo *.env*.
 4.  Coloque ambos os arquivos dentro da pasta: server/config/.
 
+## 💾 6.1 Mini Tutorial – Criando o Firestore e Obtendo as Credenciais (caso seja necessário)
+
+Caso seja necessário criar o Firestore manualmente, siga os passos:
+
+1. Acesse: https://console.firebase.google.com
+
+2. Clique em Criar Projeto → dê um nome qualquer.
+
+3. No menu lateral, vá em Firestore Database → Criar banco de dados → modo de teste.
+
+4. Vá em Configurações do Projeto → Contas de Serviço.
+
+5. Clique em Gerar nova chave privada → isso fará download do arquivo serviceAccountKey.json.
+   
+6. Coloque o arquivo serviceAccountKey.json dentro de ./server/config
+
+7. Crie um arquivo .env dentro de ./server/config/ com o campo:
+
+```
+JWT_SECRET=sua_chave_aqui
+```
 ---
 
 ## 🚀 7. Roteiro para Instalação e Execução
