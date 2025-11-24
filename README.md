@@ -1,148 +1,152 @@
 # Oficinas+
 
-Projeto final da disciplina **AS65A - Certificadora de Competência Identitária - N15 (2025_02)**.
+> *Projeto Final:* Disciplina AS65A - Certificadora de Competência Identitária - N15 (2025_02)
 
-O **Oficinas+** é uma aplicação full stack que permite o gerenciamento de oficinas, alunos, professores e inscrições, oferecendo uma visão pública para consulta e um ambiente autenticado para administração.
-
----
-
-## 📌 Objetivo do Projeto
-
-O objetivo do sistema é facilitar a organização e o controle de oficinas acadêmicas, permitindo:
-
-* Cadastro e gerenciamento de oficinas
-* Inscrição e cancelamento de alunos
-* Visualização pública das oficinas disponíveis
-* Gerenciamento de alunos e professores
-* Administração de salas (locais das oficinas)
+O *Oficinas+* é uma aplicação Full Stack desenvolvida para centralizar o gerenciamento de oficinas acadêmicas, permitindo o cadastro de eventos, controle de inscrições de alunos e gestão administrativa.
 
 ---
 
-## 🛠 Tecnologias Utilizadas
-
-### Backend
-
-* Node.js
-* Express.js
-* Firebase Firestore
-* JSON Web Token (JWT)
-* Bcrypt
-
-### Frontend
-
-* React (Web)
+## 👥 1. Identificação da Equipe
+* *Eduardo Carvalho de Oliveira* - RA: 2614529
+* *Júlio Cézar Bandeira Covary* - RA: 2612224
+* *Luan Venicios Salomão de Almeida* - RA: 2564220
+* *Matheus Faustino Meneguim* - RA: 2564823
+* *Murillo Tadeu Amadeu* - RA: 2564246
 
 ---
 
-## 🔐 Autenticação
+## 🎯 2. Objetivo e Funcionalidades
+O objetivo do sistema é facilitar a organização e o controle de oficinas acadêmicas, eliminando o uso de planilhas descentralizadas e garantindo a integridade das inscrições.
 
-O sistema utiliza autenticação baseada em:
-
-* **JWT (JSON Web Token)** para controle de sessão
-* **Bcrypt** para criptografia das senhas
-
-As rotas protegidas exigem que o usuário esteja autenticado.
+*Funcionalidades Desenvolvidas:*
+1.  *Módulo Público:* Visualização de oficinas disponíveis (Dashboard).
+2.  *Módulo Professor (Admin):* Cadastro, edição e exclusão de oficinas; gestão de salas; visualização de lista de presença.
+3.  *Módulo Aluno:* Inscrição em oficinas (com validação de vagas) e cancelamento de inscrição.
+4.  *Autenticação:* Login seguro com distinção de níveis de acesso (Professor/Aluno).
 
 ---
 
-## 📂 Estrutura das Rotas
+## 🛠 3. Ferramentas e Tecnologias (Requisitos para Compilação)
 
-### 🔓 Rotas Públicas
+Para codificar, compilar e executar este projeto, foram utilizadas as ferramentas e bibliotecas listadas abaixo. É necessário ter o ambiente configurado com versões compatíveis.
 
-* `GET /api/public`
+### 3.1. Ferramentas de Base (Ambiente)
+| Ferramenta | Versão Utilizada | Link para Download |
+| :--- | :--- | :--- |
+| *Node.js* | [Inserir Versão ex: v20.11.0] | [nodejs.org](https://nodejs.org/) |
+| *NPM* | [Inserir Versão] | (Instalado com o Node) |
+| *Git* | [Inserir Versão] | [git-scm.com](https://git-scm.com/) |
+| *VS Code* | [Inserir Versão] | [code.visualstudio.com](https://code.visualstudio.com/) |
 
-  * Retorna os dados públicos para o dashboard inicial.
+### 3.2. Banco de Dados
+| Tecnologia | Tipo | Link Oficial |
+| :--- | :--- | :--- |
+| *Firebase Firestore* | NoSQL (Cloud) | [firebase.google.com](https://firebase.google.com/) |
 
-### 🔐 Rotas de Autenticação
+### 3.3. Bibliotecas Principais (Dependências)
+| Biblioteca | Versão | Função | Link |
+| :--- | :--- | :--- | :--- |
+| *Express* | ^4.x | Framework Backend | [npmjs.com/package/express](https://www.npmjs.com/package/express) |
+| *React* | ^18.x | Biblioteca Frontend | [react.dev](https://react.dev/) |
+| *Firebase Admin* | [Ver package.json] | SDK do Banco de Dados | [npmjs.com/package/firebase-admin](https://www.npmjs.com/package/firebase-admin) |
+| *JsonWebToken* | ^9.x | Autenticação (JWT) | [npmjs.com/package/jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) |
+| *Bcrypt* | ^5.x | Criptografia | [npmjs.com/package/bcrypt](https://www.npmjs.com/package/bcrypt) |
 
-* `POST /api/auth/login`
-* `POST /api/auth/register`
-* `PUT /api/auth/profile/:id`
-* `PUT /api/auth/password/:id`
+---
 
-Gerenciamento de usuários com login e cadastro.
+## 🔐 4. Autenticação e Segurança
 
-### 📘 Documentação
+O sistema utiliza autenticação robusta para proteger os dados:
+* *JWT (JSON Web Token):* Utilizado para controle de sessão stateless.
+* *Bcrypt:* Utilizado para criptografia (hash) das senhas no banco de dados.
+* *Middlewares:* As rotas protegidas interceptam as requisições para validar o token antes de permitir o acesso.
 
-* `GET /api/docs`
+---
 
-  * Exibe a documentação da API via Swagger.
+## 📂 5. Estrutura da API (Rotas)
 
-### 👨‍🏫 Professores
+Abaixo estão os principais endpoints disponíveis na API:
 
-* `GET /api/professor`
+### 🔓 Públicas e Autenticação
+* GET /api/public - Dados para dashboard inicial.
+* POST /api/auth/login - Autenticação de usuários.
+* POST /api/auth/register - Cadastro de novos usuários.
+* GET /api/docs - Documentação Swagger.
 
-  * Lista todos os usuários que possuem perfil de professor.
+### 👨‍🏫 Professores e Salas
+* GET /api/professor - Lista professores cadastrados.
+* GET /api/salas - Lista locais disponíveis.
+* POST /api/salas - Cadastra nova sala (Admin).
 
 ### 👩‍🎓 Alunos
+* GET /api/alunos - Listagem de alunos.
+* PUT /api/alunos/:id - Atualização de perfil.
 
-* `GET /api/alunos`
-* `POST /api/alunos`
-* `PUT /api/alunos/:id`
-* `DELETE /api/alunos/:id`
-
-Gerenciamento completo dos alunos.
-
-### 🛠 Oficinas
-
-* `GET /api/oficinas`
-* `POST /api/oficinas`
-* `PUT /api/oficinas/:id`
-* `DELETE /api/oficinas/:id`
-* `POST /api/oficinas/:id/inscrever`
-* `DELETE /api/oficinas/:id/inscrever`
-* `GET /api/oficinas/:id/inscritos`
-
-Gerenciamento das oficinas e das inscrições.
-
-### 🏫 Salas
-
-* `GET /api/salas`
-* `GET /api/salas/:id`
-* `POST /api/salas`
-* `PUT /api/salas/:id`
-* `DELETE /api/salas/:id`
-
-Gerenciamento dos locais onde as oficinas acontecem.
+### 🛠 Oficinas (Core)
+* GET /api/oficinas - Lista oficinas.
+* POST /api/oficinas - Cria nova oficina (Professor).
+* POST /api/oficinas/:id/inscrever - Realiza inscrição do aluno.
+* GET /api/oficinas/:id/inscritos - Lista de presença.
 
 ---
 
-## 🚀 Como Rodar o Projeto
+## ⚙️ 6. Roteiro para Configuração do Banco de Dados
 
-### Backend
+O sistema utiliza o *Firebase Firestore* (em nuvem). Não é necessária a instalação de um SGBD local, mas é *obrigatória a configuração das credenciais*.
 
+*⚠️ IMPORTANTE:* Por segurança, os arquivos de chave privada não estão neste repositório.
+1.  Obtenha o arquivo credenciais_projeto.zip (enviado em anexo na entrega da tarefa ou via link do Drive disponibilizado).
+2.  Extraia o arquivo *serviceAccountKey.json*.
+3.  Extraia o arquivo *.env*.
+4.  Coloque ambos os arquivos dentro da pasta: server/config/.
+
+---
+
+## 🚀 7. Roteiro para Instalação e Execução
+
+### Passo 1: Clonar o Repositório
 ```bash
-git clone https://github.com/seu-usuario/oficinas-plus.git
+git clone [https://github.com/eduardocarvalhoo1/CertificadoraIdentitaria.git](https://github.com/eduardocarvalhoo1/CertificadoraIdentitaria.git)
+cd CertificadoraIdentitaria
+
+### Passo 2: Configurar e Rodar o backend
+1. Acesse a pasta do servidor: 
 cd server
-create file server/config/.env (JWT_SECRET)
-paste file server/config/serviceAccountKey.json
+
+2. Configuração de Credenciais: 
+Certifique-se de que colou os arquivos serviceAccountKey.json e .env na pasta server/config/.
+
+3. Instale as dependências e inicie:
 npm install
 npm start
-```
 
-### Frontend
+Sucesso: O terminal exibirá "Server running on port 3000" e "Firebase connected".
 
-```bash
+### Passo 3: Rodar o frontend
+1. Abra um novo terminal na raiz do projeto
+2. Instale as dependências e inicie:
 npm install
 npm start
-```
+3. O navegador abrirá automaticamente o endereço local (ex: http://localhost:5173).
 
----
+## 🧪 8. Roteiro de Testes
+8.1. Contas de Acesso Padrão
+| Perfil | E-mail | Senha |
+| Professor (Admin) | professor@teste.com | 123456 |
+| Aluno | aluno@teste.com | 123456 |
 
-## 👨‍🎓 Disciplina
+8.2. Passo a Passo de Teste
+Login Professor: Acesse com a conta de professor.
 
-Projeto desenvolvido como requisito avaliativo da disciplina:
-**AS65A - Certificadora de Competência Identitária - N15 (2025_02)**
+Criar Sala: Cadastre um local (ex: "Lab 01").
 
-### 👥 Membros
-- Eduardo Carvalho de Oliveira - RA: 2614529 
-- Júlio Cézar Bandeira Covary - RA: 2612224 
-- Luan Venicios Salomão de Almeida - RA: 2564220 
-- Matheus Faustino Meneguim - RA: 2564823 
-- Murillo Tadeu Amadeu - RA: 2564246
+Criar Oficina: Crie uma oficina vinculada a essa sala e defina vagas.
 
----
+Login Aluno: Entre com a conta de aluno.
 
-## 📄 Licença
+Inscrição: Inscreva-se na oficina criada e verifique o decremento de vagas.
 
-Projeto com finalidade exclusivamente educacional.
+Validação: Volte ao perfil de professor e confira a lista de inscritos.
+
+📄 Licença
+Projeto desenvolvido com finalidade exclusivamente educacional.
