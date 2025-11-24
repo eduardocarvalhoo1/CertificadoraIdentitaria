@@ -33,9 +33,9 @@ Para codificar, compilar e executar este projeto, foram utilizadas as ferramenta
 ### 3.1. Ferramentas de Base (Ambiente)
 | Ferramenta | Versão Utilizada | Link para Download |
 | :--- | :--- | :--- |
-| *Node.js* | [Inserir Versão ex: v20.11.0] | [nodejs.org](https://nodejs.org/) |
-| *NPM* | [Inserir Versão] | (Instalado com o Node) |
-| *Git* | [Inserir Versão] | [git-scm.com](https://git-scm.com/) |
+| *Node.js* | [^21.7.0] | [nodejs.org](https://nodejs.org/) |
+| *NPM* | [^10.x] | (Instalado com o Node) |
+| *Git* | [^2.49.x] | [git-scm.com](https://git-scm.com/) |
 | *VS Code* | [Inserir Versão] | [code.visualstudio.com](https://code.visualstudio.com/) |
 
 ### 3.2. Banco de Dados
@@ -48,7 +48,7 @@ Para codificar, compilar e executar este projeto, foram utilizadas as ferramenta
 | :--- | :--- | :--- | :--- |
 | *Express* | ^4.x | Framework Backend | [npmjs.com/package/express](https://www.npmjs.com/package/express) |
 | *React* | ^18.x | Biblioteca Frontend | [react.dev](https://react.dev/) |
-| *Firebase Admin* | [Ver package.json] | SDK do Banco de Dados | [npmjs.com/package/firebase-admin](https://www.npmjs.com/package/firebase-admin) |
+| *Firebase Admin* | ^13.5.0 | SDK do Banco de Dados | [npmjs.com/package/firebase-admin](https://www.npmjs.com/package/firebase-admin) |
 | *JsonWebToken* | ^9.x | Autenticação (JWT) | [npmjs.com/package/jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) |
 | *Bcrypt* | ^5.x | Criptografia | [npmjs.com/package/bcrypt](https://www.npmjs.com/package/bcrypt) |
 
