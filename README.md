@@ -129,6 +129,8 @@ JWT_SECRET=sua_chave_aqui
 ```
 ---
 
+Com isso, o backend já estará apto a conectar ao Firestore.
+
 ## 🚀 7. Roteiro para Instalação e Execução
 
 ## Requisitos
