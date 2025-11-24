@@ -33,10 +33,10 @@ Para codificar, compilar e executar este projeto, foram utilizadas as ferramenta
 ### 3.1. Ferramentas de Base (Ambiente)
 | Ferramenta | Versão Utilizada | Link para Download |
 | :--- | :--- | :--- |
-| *Node.js* | [^21.7.0] | [nodejs.org](https://nodejs.org/) |
-| *NPM* | [^10.x] | (Instalado com o Node) |
-| *Git* | [^2.49.x] | [git-scm.com](https://git-scm.com/) |
-| *VS Code* | [Inserir Versão] | [code.visualstudio.com](https://code.visualstudio.com/) |
+| *Node.js* | ^21.7.0 | [nodejs.org](https://nodejs.org/) |
+| *NPM* | ^10.x | (Instalado com o Node) |
+| *Git* | ^2.49.x | [git-scm.com](https://git-scm.com/) |
+| *VS Code* | ^1.106.0 | [code.visualstudio.com](https://code.visualstudio.com/) |
 
 ### 3.2. Banco de Dados
 | Tecnologia | Tipo | Link Oficial |
